@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: "notification-service"
+
+server:
+  port: 8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka"
+    register-with-eureka: true
+    fetch-registry: true

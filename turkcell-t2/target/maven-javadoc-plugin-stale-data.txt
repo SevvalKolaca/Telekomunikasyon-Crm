@@ -1,0 +1,48 @@
+@options
+@packages
+@argfile
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Users/C.ERGUL/Desktop/crm.microservices/turkcell-t2/src/main/java;C:/Users/C.ERGUL/Desktop/crm.microservices/turkcell-t2/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/C.ERGUL/Desktop/crm.microservices/turkcell-t2/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'turkcell-t2 1.0 API'
+-use
+-version
+-windowtitle
+'turkcell-t2 1.0 API'
+io.github.ergulberke
+'C:/Users/C.ERGUL/Desktop/crm.microservices/turkcell-t2/src/main/java/io/github/ergulberke/Main.java'
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\src\main\java = 1740143728061
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\generated-sources\annotations = 1740147023700
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\allclasses-index.html = 1740147026981
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\allpackages-index.html = 1740147026984
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\copy.svg = 1740147027008
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\element-list = 1740147026941
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\help-doc.html = 1740147027003
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\index-all.html = 1740147026995
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\index.html = 1740147026998
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\link.svg = 1740147027010
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\member-search-index.js = 1740147026988
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\module-search-index.js = 1740147026985
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\overview-tree.html = 1740147026971
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\package-search-index.js = 1740147026986
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\script.js = 1740147027007
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\search-page.js = 1740147027014
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\search.html = 1740147026997
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\search.js = 1740147027012
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\stylesheet.css = 1740147027005
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\tag-search-index.js = 1740147026988
+C:\Users\C.ERGUL\Desktop\crm.microservices\turkcell-t2\target\apidocs\type-search-index.js = 1740147026987
