@@ -4,26 +4,34 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: "order-service"
-          uri: "lb://order-service"
+        - id: "user-service"
+          uri: "lb://user-service"
           predicates:
-            - "Path=/api/v1/order/**"
-        - id: "product-service"
-          uri: "lb://product-service"
-          predicates:
-            - "Path=/api/v1/product/**"
-        - id: "cart-service"
-          uri: "lb://cart-service"
-          predicates:
-            - "Path=/api/v1/cart/**"
+            - "Path=/api/v1/user/**"
         - id: "customer-service"
           uri: "lb://customer-service"
           predicates:
             - "Path=/api/v1/customer/**"
-        - id: "identity-service"
-          uri: "lb://identity-service"
+        - id: "contract-service"
+          uri: "lb://contract-service"
           predicates:
-            - "Path=/api/v1/identity/**"
+            - "Path=/api/v1/contract/**"
+        - id: "plan-service"
+          uri: "lb://plan-service"
+          predicates:
+            - "Path=/api/v1/plan/**"
+        - id: "billing-payment-service"
+          uri: "lb://billing-payment-service"
+          predicates:
+            - "Path=/api/v1/billing-payment/**"
+        - id: "customer-support-service"
+          uri: "lb://customer-support-service"
+          predicates:
+            - "Path=/api/v1/customer-support/**"
+        - id: "analytics-service"
+          uri: "lb://analytics-service"
+          predicates:
+            - "Path=/api/v1/analytics/**"
         - id: "notification-service"
           uri: "lb://notification-service"
           predicates:
