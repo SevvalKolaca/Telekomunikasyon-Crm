@@ -1,5 +1,6 @@
 package com.turkcell.billing_payment_service.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,16 +19,22 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="amount",nullable = false)
     private Double amount;
 
+    @Column(name="payment_method",nullable = false)
     private String paymentMethod;   // nakit, kredi kartı, banka kartı ?
 
+    @Column(name="customer_id",nullable = false)
     private Long customerId;    // customer'dan gelecek
 
+    @Column(name="bill_id",nullable = false)
     private Long billId;
 
+    @Column(name="status",nullable = false)
     private String status;  // ödeme durumu --> Bekliyor , Ödendi , Tarihi Geçti şeklinde olabilir
 
+    @Column(name="payment_date")
     private LocalDateTime paymentDate;
 
     public Long getId() {

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("/api/v1/bills")
 public class BillController {
     private final BillService billService;
 
