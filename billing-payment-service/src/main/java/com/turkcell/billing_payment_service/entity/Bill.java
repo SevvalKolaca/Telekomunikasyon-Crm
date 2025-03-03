@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
 
-import org.hibernate.validator.constraints.UUID;
-
 @Entity
 @Getter
 @Setter
@@ -19,8 +17,7 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID billNumber;
+    private String billNumber;
 
     private Double amount;
 

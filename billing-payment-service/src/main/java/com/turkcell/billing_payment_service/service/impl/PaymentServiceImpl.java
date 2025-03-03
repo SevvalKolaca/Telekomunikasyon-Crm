@@ -3,7 +3,7 @@ package com.turkcell.billing_payment_service.service.impl;
 import com.turkcell.billing_payment_service.dto.PaymentRequestDTO;
 import com.turkcell.billing_payment_service.dto.PaymentResponseDTO;
 import com.turkcell.billing_payment_service.entity.Bill;
-import com.turkcell.billing_payment_service.entity.Customer;
+//import com.turkcell.billing_payment_service.entity.Customer;
 import com.turkcell.billing_payment_service.entity.Payment;
 import com.turkcell.billing_payment_service.repository.PaymentRepository;
 import com.turkcell.billing_payment_service.service.BillService;
@@ -41,8 +41,8 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new RuntimeException("Fatura bulunamadı"));
                 
         // Müşteri kontrolü
-        Customer customer = customerService.findById(payment.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("Müşteri bulunamadı"));
+        //Customer customer = customerService.findById(payment.getCustomerId())
+        //        .orElseThrow(() -> new RuntimeException("Müşteri bulunamadı"));
 
         // Ödeme tutarı kontrolü
         if (!payment.getAmount().equals(bill.getAmount())) {

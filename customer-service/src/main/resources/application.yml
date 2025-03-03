@@ -2,7 +2,7 @@ spring:
   application:
     name: "customer-service"
   datasource:
-    url: "jdbc:postgresql://localhost:5432/customer-service"
+    url: "jdbc:postgresql://localhost:5432/postgres"
     username: postgres
     password: test
   jpa:
