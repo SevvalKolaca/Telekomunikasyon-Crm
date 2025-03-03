@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -25,6 +23,8 @@ public class Payment {
     private String paymentMethod;   // nakit, kredi kartı, banka kartı ?
 
     private Long customerId;    // customer'dan gelecek
+
+    private Long billId;
 
     private String status;  // ödeme durumu --> Bekliyor , Ödendi , Tarihi Geçti şeklinde olabilir
 
@@ -60,6 +60,14 @@ public class Payment {
 
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
+    }
+
+    public Long getBillId() {
+        return billId;
+    }
+
+    public void setBillId(Long billId) {
+        this.billId = billId;
     }
 
     public String getStatus() {
