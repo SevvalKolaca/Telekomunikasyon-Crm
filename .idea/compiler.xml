@@ -11,17 +11,18 @@
         <module name="turkcell-t2" />
         <module name="discovery-server" />
       </profile>
-      <profile name="Annotation profile for customer-service" enabled="true">
+      <profile name="Annotation profile for notification-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="product-service" />
         <module name="cart-service" />
-        <module name="order-service" />
+        <module name="billing-payment-service" />
         <module name="customer-service" />
+        <module name="product-service" />
+        <module name="order-service" />
         <module name="identity-service" />
         <module name="notification-service" />
       </profile>
@@ -32,6 +33,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="billing-payment-service" options="-parameters" />
       <module name="cart-service" options="-parameters" />
       <module name="customer-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />

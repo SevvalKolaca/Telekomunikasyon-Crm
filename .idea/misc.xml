@@ -14,6 +14,7 @@
         <option value="$PROJECT_DIR$/discovery-server/pom.xml" />
         <option value="$PROJECT_DIR$/common/pom.xml" />
         <option value="$PROJECT_DIR$/turkcell-t2/pom.xml" />
+        <option value="$PROJECT_DIR$/billing-payment-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
