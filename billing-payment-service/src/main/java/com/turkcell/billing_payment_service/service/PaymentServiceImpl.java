@@ -4,10 +4,7 @@ import com.turkcell.billing_payment_service.dto.PaymentRequestDTO;
 import com.turkcell.billing_payment_service.dto.PaymentResponseDTO;
 import com.turkcell.billing_payment_service.entity.Payment;
 import com.turkcell.billing_payment_service.repository.PaymentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -28,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus("SUCCESS"); // Ödeme başarılı olduğunu varsayalım
         paymentRepository.save(payment);
 
-        // Response DTO oluştur
+
         PaymentResponseDTO response = new PaymentResponseDTO();
         response.setPaymentId(payment.getId());
         response.setStatus(payment.getStatus());
@@ -41,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDTO getPaymentStatus(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId).orElseThrow(() -> new RuntimeException("Payment not found"));
 
-        // Response DTO oluştur
+
         PaymentResponseDTO response = new PaymentResponseDTO();
         response.setPaymentId(payment.getId());
         response.setStatus(payment.getStatus());
