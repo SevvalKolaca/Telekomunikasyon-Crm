@@ -1,8 +1,6 @@
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.turkcell.user_service.dto;
+
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 
 public class ErrorResponse {

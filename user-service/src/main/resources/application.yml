@@ -2,8 +2,10 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/userservice
+    url: jdbc:postgresql://localhost:5433/userservice #billing ile aynı portta- customer değişince onun yerini alalım pls
     username: postgres
     password: test 
     driver-class-name: org.postgresql.Driver
@@ -18,5 +20,14 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false  # OSIV (Open Session in View) pattern'i devre dışı bırakır
-
-
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
