@@ -4,37 +4,40 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: "order-service"
-          uri: "lb://order-service"
+        - id: "contract-service"
+          uri: "lb://contract-service"
           predicates:
-            - "Path=/api/v1/order/**"
+            - "Path=/api/contract/**"
         - id: "product-service"
           uri: "lb://product-service"
           predicates:
-            - "Path=/api/v1/product/**"
+            - "Path=/api/product/**"
         - id: "cart-service"
           uri: "lb://cart-service"
           predicates:
-            - "Path=/api/v1/cart/**"
+            - "Path=/api/cart/**"
         - id: "customer-service"
           uri: "lb://customer-service"
           predicates:
-            - "Path=/api/v1/customer/**"
+            - "Path=/api/customer/**"
         - id: "identity-service"
           uri: "lb://identity-service"
           predicates:
-            - "Path=/api/v1/identity/**"
+            - "Path=/api/identity/**"
         - id: "notification-service"
           uri: "lb://notification-service"
           predicates:
-            - "Path=/api/v1/notification/**"
+            - "Path=/api/notification/**"
 
 server:
   port: 8080
 
 eureka:
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    hostname: localhost
   client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka
     fetch-registry: true
+    register-with-eureka: true
