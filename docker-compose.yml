@@ -7,7 +7,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=customer-service
     volumes:
       - pg1_data:/var/lib/postgresql/data
 
@@ -19,7 +19,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=billing-payment-service
     volumes:
       - pg2_data:/var/lib/postgresql/data
 
@@ -60,4 +60,5 @@ volumes:
   pg2_data:
   pg3_data:
 
+#
 # 2 mongo ve 1 mysql eklenecek

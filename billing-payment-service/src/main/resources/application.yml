@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: "billing-payment-service"
+  datasource:
+    url: "jdbc:postgresql://localhost:5433/postgres"
+    username: postgres
+    password: test
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    showSql: true
+    hibernate:
+      ddlAuto: update
+server:
+  port: 8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true
