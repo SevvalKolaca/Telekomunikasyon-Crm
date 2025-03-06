@@ -1,27 +1,24 @@
 package com.turkcell.user_service.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import org.modelmapper.ModelMapper;
-
 import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
 import com.turkcell.user_service.dto.create.CreatedUserResponse;
-import com.turkcell.user_service.dto.get.GetUserResponse;
-import com.turkcell.user_service.dto.update.UpdateUserResponse;
-import com.turkcell.user_service.dto.update.UpdateUserRequest;
 import com.turkcell.user_service.dto.delete.DeleteUserResponse;
-import com.turkcell.user_service.dto.getAll.GetAllUserResponse;
+import com.turkcell.user_service.dto.get.GetUserResponse;
+import com.turkcell.user_service.dto.getAll.getAllUserResponse;
+import com.turkcell.user_service.dto.update.UpdateUserRequest;
+import com.turkcell.user_service.dto.update.UpdateUserResponse;
 import com.turkcell.user_service.entity.User;
 import com.turkcell.user_service.exception.UserException;
 import com.turkcell.user_service.repository.UserRepository;
-import com.turkcell.user_service.service.UserService;
-
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 //@RequiredArgsConstructor
@@ -80,9 +77,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override 
-    public List<GetAllUserResponse> getAllUsers(){
+    public List<getAllUserResponse> getAllUsers(){
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> modelMapper.map(user, GetAllUserResponse.class)).collect(Collectors.toList());
+        return users.stream().map(user -> modelMapper.map(user, getAllUserResponse.class)).collect(Collectors.toList());
     }
 
     @Override

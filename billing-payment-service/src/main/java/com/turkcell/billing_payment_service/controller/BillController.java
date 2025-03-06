@@ -6,17 +6,22 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.cloud.stream.function.StreamBridge;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/v1/bills")
 public class BillController {
     private final BillService billService;
+    private final StreamBridge streamBridge;
 
-    public BillController(BillService billService) {
+    public BillController(BillService billService, StreamBridge streamBridge) {
         this.billService = billService;
+        this.streamBridge = streamBridge;
     }
 
     @PostMapping
@@ -59,4 +64,23 @@ public class BillController {
         billService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/test")
+    public String get() {
+    //     Bill bill = new Bill();
+    //     bill.setBillNumber("1234567890");
+    //     bill.setAmount(100.0);
+    //     bill.setDueDate(LocalDate.now().plusDays(30));
+    //     bill.setStatus("PENDING");
+    //     bill.setCustomerId(1L);
+        streamBridge.send("billingPaymentFunction-out-0", "fatura");
+        return "async deneme";
+
+        
+    }
+    
+
+
+
+
 } 

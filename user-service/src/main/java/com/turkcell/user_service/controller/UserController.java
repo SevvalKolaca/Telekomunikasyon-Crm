@@ -1,25 +1,28 @@
 package com.turkcell.user_service.controller;
 
-import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
 import com.turkcell.user_service.dto.create.CreatedUserResponse;
-import com.turkcell.user_service.dto.get.GetUserResponse;
-import com.turkcell.user_service.dto.getAll.GetAllUserResponse;
 import com.turkcell.user_service.dto.delete.DeleteUserResponse;
+import com.turkcell.user_service.dto.get.GetUserResponse;
+import com.turkcell.user_service.dto.getAll.getAllUserResponse;
 import com.turkcell.user_service.dto.update.UpdateUserRequest;
 import com.turkcell.user_service.dto.update.UpdateUserResponse;
 import com.turkcell.user_service.service.UserService;
-import com.turkcell.user_service.exception.UserException;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;  
 
 @RestController
 @RequestMapping("/users")
@@ -35,7 +38,7 @@ public class UserController {
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<GetAllUserResponse> getAllUsers(){
+    public List<getAllUserResponse> getAllUsers(){
         return userService.getAllUsers();
     }
 
