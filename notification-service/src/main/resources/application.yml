@@ -1,7 +1,7 @@
 spring:
   application:
     name: "notification-service"
-  cloud:
+  cloud:   # billing & payment  ile async iletişim
     stream:
       defaultBinder: kafka
       function:

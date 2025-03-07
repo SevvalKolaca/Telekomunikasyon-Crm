@@ -2,6 +2,7 @@ package com.turkcell.billing_payment_service.controller;
 
 import com.turkcell.billing_payment_service.entity.Bill;
 import com.turkcell.billing_payment_service.service.BillService;
+import io.github.ergulberke.event.billingPayment.BillCreatedEvent;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,9 @@ public class BillController {
     //     bill.setDueDate(LocalDate.now().plusDays(30));
     //     bill.setStatus("PENDING");
     //     bill.setCustomerId(1L);
+
+        BillCreatedEvent billCreatedEvent = new BillCreatedEvent();
+
         streamBridge.send("billingPaymentFunction-out-0", "fatura");
         return "async deneme";
 

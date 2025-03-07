@@ -1,0 +1,1 @@
+belki global loglama / tracing işlemleri için kullanılabilir

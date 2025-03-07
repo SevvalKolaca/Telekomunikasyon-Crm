@@ -4,7 +4,7 @@
 
     <groupId>io.github.ergulberke</groupId>
     <artifactId>turkcell-t2</artifactId>
-    <version>2.1</version>
+    <version>2.1.1</version>
     <packaging>jar</packaging>
 
     <name>turkcell-t2</name>
