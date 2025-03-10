@@ -1,5 +1,6 @@
 package com.turkcell.customer_service.dto;
 
+import com.turkcell.customer_service.enums.AccountStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -24,4 +25,5 @@ public class CustomerResponse {
     private String address;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private AccountStatus accountStatus;
 }

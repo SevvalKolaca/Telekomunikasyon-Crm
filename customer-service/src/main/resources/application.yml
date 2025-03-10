@@ -2,22 +2,29 @@ spring:
   application:
     name: "customer-service"
   datasource:
-    url: "jdbc:postgresql://localhost:5432/postgres"
-    username: postgres
+    url: "jdbc:mysql://localhost:3306/my_database?useSSL=false&serverTimezone=UTC"
+    username: myuser
     password: test
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    showSql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
     hibernate:
-      ddlAuto: update
+      ddl-auto: update
+
 server:
   port: 8082
 
 eureka:
   client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka
     fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30

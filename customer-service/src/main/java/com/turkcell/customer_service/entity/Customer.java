@@ -1,5 +1,6 @@
 package com.turkcell.customer_service.entity;
 
+import com.turkcell.customer_service.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
@@ -33,6 +34,10 @@ public class Customer {
 
     private String address;
 
+    @Column(name = "account_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -42,6 +47,9 @@ public class Customer {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        if (accountStatus == null) { // Eğer dışarıdan bir değer atanmadıysa
+            accountStatus = AccountStatus.PENDING; //varsıyal olarak PENDING başlasın
+        }
     }
 
     @PreUpdate
