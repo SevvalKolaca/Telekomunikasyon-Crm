@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,23 +31,48 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
+    public CustomerResponse getCustomerById(UUID id) {
+        Customer customer = rules.findCustomerByIdOrThrow(id);
+        return buildCustomerResponse(customer);
+    }
+
+    @Override
     public CustomerResponse getCustomerByEmail(String email) {
-        return null;
+        Customer customer = rules.findCustomerByEmailOrThrow(email);
+        return buildCustomerResponse(customer);
     }
 
     @Override
     public List<CustomerResponse> getAllCustomers() {
-        return List.of();
+        return customerRepository.findAll().stream()
+                .map(this::buildCustomerResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CustomerResponse updateCustomer(UUID id, CustomerRequest request) {
-        return null;
+        Customer existingCustomer = rules.findCustomerByIdOrThrow(id);
+
+        rules.checkIfEmailExistsForUpdate(existingCustomer.getEmail(), request.getEmail());
+
+        rules.validatePhoneNumberIfPresent(request.getPhone());
+
+        existingCustomer.setFirstName(request.getFirstName());
+        existingCustomer.setLastName(request.getLastName());
+        existingCustomer.setEmail(request.getEmail());
+        existingCustomer.setPhone(request.getPhone());
+        existingCustomer.setAddress(request.getAddress());
+        existingCustomer.setAddress((request.getAddress()));
+        //existingCustomer.getAccountStatus(request.getAccountStatus());
+
+        Customer updatedCustomer = customerRepository.save(existingCustomer);
+        return buildCustomerResponse(updatedCustomer);
     }
 
     @Override
     public void deleteCustomer(UUID id) {
-
+        rules.checkIfCustomerExistsById(id);
+        customerRepository.deleteById(id);
     }
 
     private Customer buildCustomerFromRequest(CustomerRequest request) {

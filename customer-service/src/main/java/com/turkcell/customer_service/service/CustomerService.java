@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface CustomerService {
     CustomerResponse createCustomer(CustomerRequest request);
+    CustomerResponse getCustomerById(UUID id);
     CustomerResponse getCustomerByEmail(String email);
     List<CustomerResponse> getAllCustomers();
     CustomerResponse updateCustomer(UUID id,CustomerRequest request);

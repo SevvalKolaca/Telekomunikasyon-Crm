@@ -1,5 +1,6 @@
 package com.turkcell.customer_service.dto;
 
+import com.turkcell.customer_service.enums.AccountStatus;
 import com.turkcell.customer_service.validation.TurkishPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -28,4 +29,6 @@ public class CustomerRequest {
     private String phone;
 
     private String address;
+
+    //private AccountStatus accountStatus;
 }
