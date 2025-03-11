@@ -17,6 +17,7 @@
         <option value="$PROJECT_DIR$/billing-payment-service/pom.xml" />
         <option value="$PROJECT_DIR$/contract-service/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/plan-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -25,7 +26,7 @@
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" project-jdk-name="21" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
