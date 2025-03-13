@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: "analytics-service"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/analytics_db
+    username: postgres
+    password: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        userEventConsumer-in-0:
+          destination: user-events
+          group: analytics-service-group
+        subscriptionEventConsumer-in-0:
+          destination: subscription-events
+          group: analytics-service-group
+
+server:
+  port: 8087
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+  instance:
+    prefer-ip-address: true
+
+analytics:
+  reporting:
+    cron: "0 0 0 * * *" # Her gün gece yarısı çalışır 
