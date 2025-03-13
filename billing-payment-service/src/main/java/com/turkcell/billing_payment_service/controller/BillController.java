@@ -1,6 +1,8 @@
 package com.turkcell.billing_payment_service.controller;
 
 import com.turkcell.billing_payment_service.entity.Bill;
+import com.turkcell.billing_payment_service.enums.PaymentMethod;
+import com.turkcell.billing_payment_service.enums.PaymentStatus;
 import com.turkcell.billing_payment_service.service.BillService;
 import io.github.ergulberke.event.billingPayment.BillCreatedEvent;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -75,10 +77,10 @@ public class BillController {
     //     bill.setStatus("PENDING");
     //     bill.setCustomerId(1L);
 
-        BillCreatedEvent billCreatedEvent = new BillCreatedEvent();
+        BillCreatedEvent billCreatedEvent = new BillCreatedEvent(1L,"asd",123.0,LocalDate.now(),LocalDate.now(), "BEKLIYOR",123L);
 
-        streamBridge.send("billingPaymentFunction-out-0", "fatura");
-        return "async deneme";
+        streamBridge.send("billingPaymentFunction-out-0", billCreatedEvent);
+        return "Bill & Payment Service";
 
         
     }

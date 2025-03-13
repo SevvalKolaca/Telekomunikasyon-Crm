@@ -18,14 +18,16 @@ public class CustomerBusinnessRules {
     // Regex for Turkish phone numbers (05xx xxx xx xx format)
     private static final Pattern TURKISH_PHONE_PATTERN = Pattern.compile("^(05)([0-9]{9})$");
 
-    public void checkIfEmailExists(String email) {
-        if (customerRepository.existsByEmail(email)) {
-            throw new BusinessException("Email already exists: " + email);
+    public void checkIfEmailExists(String email)
+    {
+        if(customerRepository.existsByEmail(email)){
+            throw new BusinessException("Email already exists: " +email);
         }
     }
 
-    public void checkIfEmailExistsForUpdate(String currentEmail, String newEmail) {
-        if (!currentEmail.equals(newEmail) && customerRepository.existsByEmail(newEmail)) {
+    public void checkIfEmailExistsForUpdate(String currentEmail,String newEmail){
+        if(!currentEmail.equals(newEmail) && customerRepository.existsByEmail(newEmail))
+        {
             throw new BusinessException("Email already exists: " + newEmail);
         }
     }

@@ -55,10 +55,24 @@ services:
       - BITNAMI_DEBUG=yes
       - KAFKA_CFG_NUM_PARTITIONS=2
 
+  mysql:
+    image: mysql:latest
+    container_name: "mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=my_database
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=test
+    volumes:
+      - mysql_data:/var/lib/mysql
+
 volumes:
   pg1_data:
   pg2_data:
   pg3_data:
+  mysql_data:
 
 #
 # 2 mongo ve 1 mysql eklenecek
