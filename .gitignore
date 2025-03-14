@@ -25,7 +25,6 @@ replay_pid*
 
 # IDE files
 .idea/
-*.iml
 .vscode/
 .settings/
 .project
@@ -41,6 +40,10 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+**/target/
+.mvn/
+mvnw
+mvnw.cmd
 
 # Node
 node_modules/

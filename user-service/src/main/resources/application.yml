@@ -5,7 +5,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://localhost:5433/userservice #billing ile aynı portta- customer değişince onun yerini alalım pls
+    url: jdbc:postgresql://localhost:5435/userservice #billing ile aynı portta- customer değişince onun yerini alalım pls
     username: postgres
     password: test 
     driver-class-name: org.postgresql.Driver
@@ -31,3 +31,9 @@ eureka:
     hostname: localhost
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE

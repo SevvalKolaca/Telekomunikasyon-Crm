@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"io.github.ergulberke.event.billingPayment","l":"BillCreatedEvent"},{"p":"io.github.ergulberke.event.billingPayment","l":"BillPaidEvent"},{"p":"io.github.ergulberke.exception","l":"BusinessException"},{"p":"io.github.ergulberke","l":"Main"}];updateSearchResults();

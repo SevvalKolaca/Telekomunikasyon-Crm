@@ -12,6 +12,16 @@
         <module name="discovery-server" />
         <module name="contract-service" />
       </profile>
+      <profile name="Annotation profile for user-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
+        </processorPath>
+        <module name="plan-service" />
+        <module name="user-service" />
+      </profile>
       <profile name="Annotation profile for notification-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -26,16 +36,6 @@
         <module name="order-service" />
         <module name="identity-service" />
         <module name="notification-service" />
-      </profile>
-      <profile name="Annotation profile for plan-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.30/lombok-1.18.30.jar" />
-        </processorPath>
-        <module name="plan-service" />
-        <module name="user-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -55,6 +55,7 @@
       <module name="order-service" options="-parameters" />
       <module name="plan-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
+      <module name="turkcell-t2" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

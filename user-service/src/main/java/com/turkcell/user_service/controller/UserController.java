@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +26,10 @@ import com.turkcell.user_service.dto.update.UpdateUserRequest;
 import com.turkcell.user_service.dto.update.UpdateUserResponse;
 import com.turkcell.user_service.service.UserService;
 
+
+// TODO: roller icin endpointler yazılacak!
+// TODO: HATALAR DETAYLI ÇIKTILAR DONDURECEK!
+
 @RestController
 @RequestMapping("/users")
 //@RequiredArgsConstructor
@@ -34,6 +40,15 @@ public class UserController {
     @Autowired 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+
+    @GetMapping("/admin/test")
+    //@PreAuthorize("hasRole('ADMIN')")  // Spring Security "ROLE_" önekini otomatik ekler
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> testAdminAccess() {
+        return ResponseEntity.ok("Admin access confirmed. Your JWT is valid.");
     }
 
     @GetMapping("/getAll")

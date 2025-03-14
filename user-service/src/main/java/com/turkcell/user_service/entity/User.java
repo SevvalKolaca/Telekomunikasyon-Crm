@@ -1,10 +1,12 @@
 package com.turkcell.user_service.entity;
 
+import io.github.ergulberke.model.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +23,17 @@ public class User {
     private String email;
     private String password;
     private String phone;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<Role> roles;
+
+    public Role getRole() {
+        return roles.stream().findFirst().orElse(null);
+    }
+
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
