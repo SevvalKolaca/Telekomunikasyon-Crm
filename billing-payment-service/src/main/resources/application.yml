@@ -1,36 +1,8 @@
 spring:
   application:
     name: "billing-payment-service"
-  cloud:   # notification ile async iletişim
-    stream:
-      defaultBinder: kafka
-      function:
-        definition: billingPaymentFunction
-      bindings:
-        billingPaymentFunction-out-0:
-          destination: billing-payment-topic
-          content-type: application/json
-      kafka:
-        binder: 
-          brokers: localhost:9092
-
-  datasource:
-    url: "jdbc:postgresql://localhost:5433/postgres"
-    username: postgres
-    password: test
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    showSql: true
-    hibernate:
-      ddlAuto: update
-server:
-  port: 8085
-
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true
+  cloud:
+    config:
+      profile: local
+  config:
+    import: configserver:http://localhost:8089
