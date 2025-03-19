@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# JavaDoc dosyalarını ignore et
+target/apidocs/
+
 ### STS ###
 .apt_generated
 .classpath
