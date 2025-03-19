@@ -88,17 +88,6 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
 
-  config-server:
-    image: turkcell-config-server
-    container_name: config-server
-    ports:
-      - "8089:8089"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8089/actuator/health" ]
-      interval: 10s
-      retries: 5
-      start_period: 10s
-      timeout: 5s
   prometheus:
     image: prom/prometheus
     ports:
