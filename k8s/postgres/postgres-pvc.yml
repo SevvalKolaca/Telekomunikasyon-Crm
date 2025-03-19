@@ -1,0 +1,19 @@
+# persistent volume claim
+# statik bilgileri kaybetmemek için
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  labels:
+    app: postgres
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi   # bu postgres için diskte max 3 gb yer ayırıyorum
+
+# kubectl get pcv --> pvc var mı diye bakarız
+# kubeclt apply -f [bu dosyanın yolu]

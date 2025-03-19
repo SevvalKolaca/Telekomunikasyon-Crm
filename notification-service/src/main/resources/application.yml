@@ -14,17 +14,9 @@ spring:
       kafka:
         binder: 
           brokers: localhost:9092
-  datasource:
-    url: "jdbc:postgresql://localhost:5434/notification-service" #TODO: Hangi DB'de calisacak belirlemedik şimdilik böyle bırakıyorum
-    username: postgres                                            # docker-compose.yml dosyasında 5434 portunda postgre yazmıştım
-    password: test                                                # eğer burada başka db kullanırsak oradaki postgreyi de boşta bırakmayalım
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    showSql: true
-    hibernate:
-      ddlAuto: update
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
 server:
   port: 8088
 

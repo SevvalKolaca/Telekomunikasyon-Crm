@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-server" />
         <module name="turkcell-t2" />
+        <module name="config-server" />
         <module name="discovery-server" />
         <module name="contract-service" />
       </profile>
@@ -22,7 +23,10 @@
         <module name="plan-service" />
         <module name="user-service" />
       </profile>
+
       <profile name="Annotation profile for notification-service" enabled="true">
+      <profile name="Annotation profile for billing-payment-service" enabled="true">
+
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -46,6 +50,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="billing-payment-service" options="-parameters" />
       <module name="cart-service" options="-parameters" />
+      <module name="config-server" options="-parameters" />
       <module name="contract-service" options="-parameters" />
       <module name="customer-service" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
