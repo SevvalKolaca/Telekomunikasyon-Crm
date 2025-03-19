@@ -1,14 +1,7 @@
 package com.turkcell.user_service.dto.get;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import java.util.UUID;
 
-
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
 public class GetUserResponse {
     private String firstname;
     private String lastname;
@@ -22,7 +15,11 @@ public class GetUserResponse {
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
-    }  
+    }
+
+    public GetUserResponse(String email) {
+        this.email = email;
+    }
 
     public String getFirstname() {
         return firstname;
@@ -30,7 +27,7 @@ public class GetUserResponse {
 
     public void setFirstname(String firstname) {
         this.firstname = firstname;
-    }   
+    }
 
     public String getLastname() {
         return lastname;
@@ -54,6 +51,5 @@ public class GetUserResponse {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }   
-    
+    }
 }

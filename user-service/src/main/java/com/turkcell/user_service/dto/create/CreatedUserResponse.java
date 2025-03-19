@@ -1,10 +1,7 @@
 package com.turkcell.user_service.dto.create;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 public class CreatedUserResponse {
-    private UUID id;
     private String firstname;
     private String lastname;
     private String email;
@@ -16,8 +13,8 @@ public class CreatedUserResponse {
     }
 
     // Tüm alanları içeren constructor
-    public CreatedUserResponse(UUID id, String firstname, String lastname, String email, String phone, LocalDateTime createdAt) {
-        this.id = id;
+    public CreatedUserResponse(String firstname, String lastname, String email, String phone, LocalDateTime createdAt) {
+        
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -25,14 +22,11 @@ public class CreatedUserResponse {
         this.createdAt = createdAt;
     }
 
-    // Getter ve Setter metodları
-    public UUID getId() {
-        return id;
+    public CreatedUserResponse(String firstname, String email) {
+        this.firstname = firstname;
+        this.email = email;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getFirstname() {
         return firstname;

@@ -51,16 +51,32 @@ public class UserController {
         return ResponseEntity.ok("Admin access confirmed. Your JWT is valid.");
     }
 
+    @GetMapping("/tech-help/test")
+    //@PreAuthorize("hasRole('ADMIN')")  // Spring Security "ROLE_" önekini otomatik ekler
+    @PreAuthorize("hasAuthority('ROLE_TECH_SUPPORT')")
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> testTechHelpAccess() {
+        return ResponseEntity.ok("Tech Support access confirmed. Your JWT is valid.");
+    }
+
+    @GetMapping("/customer-help/test")
+    //@PreAuthorize("hasRole('ADMIN')")  // Spring Security "ROLE_" önekini otomatik ekler
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER_SERVICE')")
+    //@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<String> testCustHelpAccess() {
+        return ResponseEntity.ok("Customer Help access confirmed. Your JWT is valid.");
+    }
+
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
     public List<getAllUserResponse> getAllUsers(){
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public GetUserResponse getUserById(@PathVariable UUID id) {
-        return userService.getUserById(id);
+    public GetUserResponse getUserByEmail(@PathVariable String email) {
+        return userService.getUserByEmail(email);
     }
 
     @PostMapping //create user 
@@ -69,16 +85,16 @@ public class UserController {
         return userService.createUser(request);
     }
 
-    @PutMapping("/{id}") //update user
+    @PutMapping("/{email}") //update user
     @ResponseStatus(HttpStatus.OK)
-    public UpdateUserResponse updateUser(@PathVariable UUID id, @RequestBody UpdateUserRequest request){
-        return userService.updateUser(id, request);
+    public UpdateUserResponse updateUser(@PathVariable String email, @RequestBody UpdateUserRequest request){
+        return userService.updateUser(email, request);
     }
 
-    @DeleteMapping("/{id}") //delete user
+    @DeleteMapping("/{email}") //delete user
     @ResponseStatus(HttpStatus.OK)
-    public DeleteUserResponse deleteUser(@PathVariable UUID id){
-        return userService.deleteUser(id);
+    public DeleteUserResponse deleteUser(@PathVariable String email){
+        return userService.deleteUser(email);
     }
       
 

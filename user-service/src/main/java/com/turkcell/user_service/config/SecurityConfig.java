@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()  // LOGIN sayfasını açık bırakıyoruz
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")  // ADMIN için yetkilendirme
+                        .requestMatchers("/customer-help/**").hasAuthority("ROLE_CUSTOMER_SERVICE")  // CUSTOMER_SERVICE için yetkilendirme
+                        .requestMatchers("/tech-help/**").hasAuthority("ROLE_TECH_SUPPORT")  // TECH_SUPPORT için yetkilendirme
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
