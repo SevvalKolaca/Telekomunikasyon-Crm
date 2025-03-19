@@ -88,11 +88,54 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
 
+  config-server:
+    image: turkcell-config-server
+    container_name: config-server
+    ports:
+      - "8089:8089"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8089/actuator/health" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - prometheus_data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert.rules.yml:/etc/prometheus/alert.rules.yml
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
 volumes:
   pg1_data:
   pg2_data:
   pg3_data:
   mysql_data:
   pg_user_service_data:
+  grafana_data:
+  prometheus_data:
 #
 # 2 mongo ve 1 mysql eklenecek
