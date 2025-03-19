@@ -16,17 +16,39 @@ public class UpdateUserResponse {
     private String lastname;
     private String email;
     private String phone;
+    private String password;
     private LocalDateTime updatedAt;
 
     public UpdateUserResponse() {}
 
-    public UpdateUserResponse(UUID id, String firstname, String lastname, String email, String phone, LocalDateTime updatedAt) {
+    public UpdateUserResponse(UUID id, String firstname, String lastname, String email, String phone, String password, LocalDateTime updatedAt) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.phone = phone;
+        this.password = password;
         this.updatedAt = updatedAt; 
+    }
+
+    public UpdateUserResponse(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {

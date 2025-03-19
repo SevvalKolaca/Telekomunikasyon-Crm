@@ -15,7 +15,11 @@ public class getAllUserResponse {
         this.lastname = lastname;
         this.email = email;
         this.phone = phone; 
-    }   
+    }
+
+    public getAllUserResponse(String email) {
+        this.email = email;
+    }
 
     public String getFirstname() {
         return firstname;

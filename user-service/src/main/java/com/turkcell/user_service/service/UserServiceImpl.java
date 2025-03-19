@@ -46,15 +46,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserResponse getUserById(UUID id) {
-        User user = userRepository.findById(id)
-            .orElseThrow(() -> new UserException("User not found with id: " + id));
+    public GetUserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException("User not found with email: " + email));
         return modelMapper.map(user, GetUserResponse.class);
     }
 
     @Override
-    public UpdateUserResponse updateUser(UUID id, UpdateUserRequest request) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserException("User not found with id: " + id));
+    public UpdateUserResponse updateUser(String email, UpdateUserRequest request) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserException("User not found with email: " + email));
         
         if(request.getFirstname() != null) {
             user.setFirstname(request.getFirstname());
@@ -77,18 +78,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override 
-    public List<getAllUserResponse> getAllUsers(){
+    public List<getAllUserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(user -> modelMapper.map(user, getAllUserResponse.class)).collect(Collectors.toList());
+        return users.stream()
+            .map(user -> modelMapper.map(user, getAllUserResponse.class))
+            .collect(Collectors.toList());
     }
 
     @Override
-    public DeleteUserResponse deleteUser(UUID id) {
-        if(userRepository.existsById(id)) {
-            userRepository.deleteById(id);
+    public DeleteUserResponse deleteUser(String email) {
+        if(userRepository.existsByEmail(email)) {
+            userRepository.deleteByEmail(email);
             return new DeleteUserResponse("User deleted successfully", LocalDateTime.now());
         }
-        throw new UserException("User not found with id: " + id);
+        throw new UserException("User not found with email: " + email);
     }    
 }
-

@@ -13,8 +13,8 @@ import com.turkcell.user_service.dto.update.UpdateUserResponse;
 
 public interface UserService {
     CreatedUserResponse createUser(CreatedUserRequest request); 
-    GetUserResponse getUserById(UUID id); 
-    UpdateUserResponse updateUser(UUID id, UpdateUserRequest request);
-    DeleteUserResponse deleteUser(UUID id); 
+    GetUserResponse getUserByEmail(String email);
+    UpdateUserResponse updateUser(String email, UpdateUserRequest request);
     List<getAllUserResponse> getAllUsers(); 
+    DeleteUserResponse deleteUser(String email);
 }
