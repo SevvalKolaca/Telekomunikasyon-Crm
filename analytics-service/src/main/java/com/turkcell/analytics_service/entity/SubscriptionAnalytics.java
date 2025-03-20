@@ -1,7 +1,6 @@
 package com.turkcell.analytics_service.entity;
 
-import com.turkcell.analytics_service.enums.Status;
-import com.turkcell.analytics_service.enums.BillingCycle;
+import io.github.ergulberke.enums.AccountStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +37,7 @@ public class SubscriptionAnalytics {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private AccountStatus status;
 
     @Column(nullable = false)
     private LocalDate startDate;
