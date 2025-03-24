@@ -1,0 +1,34 @@
+# kaç tane çalışacak hangi image ile çalışacak gibi bilgileri burada belirliyruz .
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+
+spec:
+  replicas: 1 # kaç tane pod oluşturucaz ? kaç tane postgresql çalıştırıyoruz ?
+  selector:
+    matchLabels:   # labels>app kısmı "postgres" olanlarla eşleşiyor
+      app: postgres # labels>app kısmı "postgres" olanlarla eşleşiyor
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432 # dış port burada verilmiyor
+          envFrom:
+            - configMapRef:
+                name: postgres-config   # ismi "postgres-config" olan confimap'ten env referans aldık
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc

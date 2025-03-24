@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: "config-server"
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/ergulberke/crm-microservices-config.git"    # config github repo url
+          default-label: main
+
+server:
+  port: 8089

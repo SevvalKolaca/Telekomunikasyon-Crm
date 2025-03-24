@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: "notification-service"
+  cloud:   # billing & payment  ile async iletişim
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: billingPaymentFunction
+      bindings:
+        billingPaymentFunction-in-0:
+          destination: billing-payment-topic
+          content-type: application/json
+          group: notification-group
+      kafka:
+        binder: 
+          brokers: localhost:9092
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
+server:
+  port: 8088
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: "billing-payment-service"
+  cloud:
+    config:
+      profile: local
+  config:
+    import: configserver:http://localhost:8089

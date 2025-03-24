@@ -1,0 +1,20 @@
+# çalışan image'lar , pod'lar hangi porttan açılsın? lb yapılsın mı ? gibi ayarlar için
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+
+spec:
+  type: NodePort
+  ports:
+    - port: 5432 # cluster içindeki postgresql service portu
+      targetPort: 5432 # pod içinde gideceği port
+      nodePort: 30007 # 30000 - 32767 arası kubernates tarafından dışardan erişim için ayrılmış portlar
+  selector:
+    app: postgres
+
+
+# kubectl apply -f [bu dosyanın yolu]

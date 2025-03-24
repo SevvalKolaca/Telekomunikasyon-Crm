@@ -1,0 +1,51 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: plan-service
+  cloud:
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: planCreatedFunction
+      bindings:
+        planCreatedFunction-out-0:
+          destination: plan-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+  datasource:
+    url: jdbc:postgresql://localhost:5434/plan-service
+    username: postgres
+    password: test
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    showSql: true
+    hibernate:
+      ddlAuto: update
+  services:
+    customer:
+      url: http://localhost:8082
+    billing-payment:
+      url: http://localhost:8085
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8888/eureka/"
+    register-with-eureka: true
+    fetch-registry: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
