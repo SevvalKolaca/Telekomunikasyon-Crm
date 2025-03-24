@@ -28,10 +28,7 @@ public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
     private final ContractClient contractClient;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    
-    private static final String PLAN_CREATED_TOPIC = "plan-created";
-    private static final String PLAN_UPDATED_TOPIC = "plan-updated";
+    private final CustomerProducer customerProducer;
 
     @Override
     public List<PlanResponse> getAllPlans() {
