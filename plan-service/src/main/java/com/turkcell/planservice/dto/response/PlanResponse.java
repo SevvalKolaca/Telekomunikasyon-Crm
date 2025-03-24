@@ -1,7 +1,7 @@
 package com.turkcell.planservice.dto.response;
 
-import com.turkcell.planservice.entity.PlanStatus;
-import com.turkcell.planservice.entity.PlanType;
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

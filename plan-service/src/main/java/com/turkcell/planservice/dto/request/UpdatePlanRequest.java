@@ -1,7 +1,7 @@
 package com.turkcell.planservice.dto.request;
 
-import com.turkcell.planservice.entity.PlanStatus;
-import com.turkcell.planservice.entity.PlanType;
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.turkcell.planservice.event;
+package com.turkcell.planservice.dto;
 
 import com.turkcell.planservice.enums.PlanStatus;
 import com.turkcell.planservice.enums.PlanType;
@@ -15,14 +15,13 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlanCreatedEvent {
+public class PlanResponse {
     private UUID id;
     private String name;
+    private String description;
     private BigDecimal price;
     private PlanType type;
     private PlanStatus status;
-    private Integer smsLimit;
-    private Integer internetLimit;
-    private Integer voiceLimit;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 } 
