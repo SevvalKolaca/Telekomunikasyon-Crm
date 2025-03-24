@@ -1,61 +1,75 @@
-configurl: http://localhost:8089
-server:
-  port: 8084
-
 spring:
   application:
     name: plan-service
-  cloud:
-      config:
-        profile: local
+    
   config:
-    import: configserver:${configurl}
+    import: "optional:configserver:http://localhost:8089"
+    
   datasource:
     url: jdbc:postgresql://localhost:5434/plan-service
     username: postgres
     password: test
     driver-class-name: org.postgresql.Driver
+    
   jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
+        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    showSql: true
-    hibernate:
-      ddlAuto: update
-  services:
-    customer:
-      url: http://localhost:8082
-    billing-payment:
-      url: http://localhost:8085
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
-    enpoint:
-      health:
-        show-details: always
-    metrics:
-      export:
-        prometheus:
-          enabled: true
-    tracing:
-      sampling:
-        probability: 1.0
+        
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  observation:
     zipkin:
       tracing:
-        endpoint: "http://localhost:9411/api/v2/spans"
+        endpoint: http://localhost:9411/api/v2/spans
+    otel:
+      config:
+        trace-id-ratio-based: 1.0
+
+server:
+  port: 8084
+
 eureka:
   client:
     service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
+      defaultZone: http://localhost:8888/eureka
     fetch-registry: true
-
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: full
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+    
+logging:
+  level:
+    com.netflix.discovery: DEBUG
+    org.springframework.cloud.client.discovery: DEBUG
+    com.turkcell.planservice: DEBUG
+    
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      sla:
+        http.server.requests: 10ms, 50ms, 100ms, 200ms, 500ms 
