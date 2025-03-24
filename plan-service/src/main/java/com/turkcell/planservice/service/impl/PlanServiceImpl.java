@@ -95,7 +95,7 @@ public class PlanServiceImpl implements PlanService {
                 savedPlan.getCreatedAt()
         );
         
-        kafkaTemplate.send(PLAN_CREATED_TOPIC, event);
+       planProducer.sendPlanCreatedEvent(event);
         
         return mapToResponse(savedPlan);
     }
