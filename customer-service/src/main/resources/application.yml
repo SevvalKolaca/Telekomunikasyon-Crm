@@ -1,6 +1,18 @@
 spring:
   application:
     name: "customer-service"
+  cloud:
+    stream:
+      function:
+        definition: customerCreatedFunction
+      bindings:
+        customerCreatedFunction-out-0:
+          destination: customer-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
   datasource:
     url: "jdbc:mysql://localhost:3306/my_database?useSSL=false&serverTimezone=UTC"
     username: myuser
