@@ -1,8 +1,8 @@
 package com.turkcell.planservice.repository;
 
 import com.turkcell.planservice.entity.Plan;
-import com.turkcell.planservice.entity.PlanStatus;
-import com.turkcell.planservice.entity.PlanType;
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

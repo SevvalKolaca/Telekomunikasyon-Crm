@@ -1,7 +1,10 @@
 package com.turkcell.planservice.entity;
 
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "plans")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Plan {
@@ -22,6 +26,9 @@ public class Plan {
 
     @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String description;
 
     @Column(nullable = false)
     private BigDecimal price;
@@ -43,7 +50,7 @@ public class Plan {
     @Column(name = "voice_limit")
     private Integer voiceLimit;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")

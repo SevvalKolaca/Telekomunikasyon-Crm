@@ -1,10 +1,10 @@
 package com.turkcell.planservice.service;
 
-import com.turkcell.planservice.dto.request.CreatePlanRequest;
-import com.turkcell.planservice.dto.request.UpdatePlanRequest;
-import com.turkcell.planservice.dto.response.PlanResponse;
-import com.turkcell.planservice.entity.PlanStatus;
-import com.turkcell.planservice.entity.PlanType;
+import com.turkcell.planservice.dto.CreatePlanRequest;
+import com.turkcell.planservice.dto.PlanResponse;
+import com.turkcell.planservice.dto.UpdatePlanRequest;
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
 
 import java.util.List;
 import java.util.UUID;
