@@ -36,7 +36,25 @@ public class ContractManager implements ContractService {
         contract.setBillingPlan(request.getBillingPlan());
         contract.setMonthlyFee(request.getBillingPlan().calculateMonthlyFee());
 
-        repository.save(contract);
+         // Sözleşmeyi kaydediyoruz ve geri dönen nesneyi 'savedContract' olarak alıyoruz
+        Contract savedContract = repository.save(contract);
+        // Setter'ları kullanarak event'i oluşturuyoruz
+        ContractCreatedEvent event = new ContractCreatedEvent();
+        event.setContractId(savedContract.getId());
+        event.setCustomerId(UUID.fromString(savedContract.getCustomerId())); // customerId'yi alıyoruz
+        event.setPlanId(UUID.fromString(String.valueOf(savedContract.getBillingPlan().ordinal()))); // Enum'dan
+                                                                                                    // planId'yi
+                                                                                                    // alıyoruz
+        event.setStartDate(savedContract.getStartDate());
+        event.setEndDate(savedContract.getEndDate());
+        event.setPrice(savedContract.getMonthlyFee());
+        event.setCurrency("TRY"); // Eğer farklı bir para birimi eklemek isterseniz burada değiştirebilirsiniz
+        event.setStatus(savedContract.getStatus().toString()); // Status'ü string olarak alıyoruz
+        event.setEventType("CONTRACT_CREATED");
+        event.setTimestamp(savedContract.getCreatedAt());
+
+        // Producer ile event'i Kafka'ya gönderiyoruz
+        contractProducer.sendContractCreatedEvent(event);
     }
 
     @Override
