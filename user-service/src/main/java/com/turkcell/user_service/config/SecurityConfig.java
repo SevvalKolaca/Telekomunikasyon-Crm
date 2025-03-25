@@ -3,6 +3,7 @@ package com.turkcell.user_service.config;
 import com.turkcell.user_service.security.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,11 +29,23 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()  // LOGIN sayfasını açık bırakıyoruz
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")  // ADMIN için yetkilendirme
-                        .requestMatchers("/customer-help/**").hasAuthority("ROLE_CUSTOMER_SERVICE")  // CUSTOMER_SERVICE için yetkilendirme
-                        .requestMatchers("/tech-help/**").hasAuthority("ROLE_TECH_SUPPORT")  // TECH_SUPPORT için yetkilendirme
-                        .anyRequest().authenticated()
+                        // public endpoints önce yazılmalı !!!
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()  // LOGIN sayfasını açık bırakıyoruz
+                        .requestMatchers("/error").permitAll()
+                        // CUSTOMER_SERVICE için yetkilendirme
+                        //.requestMatchers("/customer-help/**").hasAuthority("ROLE_CUSTOMER_SERVICE")
+                        // TECH_SUPPORT için yetkilendirme
+                        //.requestMatchers("/tech-help/**").hasAuthority("ROLE_TECH_SUPPORT")
+
+                        // Test
+                        //.requestMatchers("/users/**").permitAll()  // LOGIN sayfasını açık bırakıyoruz
+
+                        // Kullanıcı işlemleri -- GET, PUT, POST, DELETE
+                        .requestMatchers(HttpMethod.GET, "/users/getAll").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/users/get-user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE", "ROLE_TECH_SUPPORT")
+                        .requestMatchers(HttpMethod.POST,"/users/create").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE","ROLE_TECH_SUPPORT")
+                        .requestMatchers(HttpMethod.PUT,"/users/update-user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE")
+                        .anyRequest().hasAuthority("ROLE_ADMIN")
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

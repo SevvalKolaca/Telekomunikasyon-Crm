@@ -1,6 +1,7 @@
 package com.turkcell.user_service.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
@@ -17,4 +18,5 @@ public interface UserService {
     UpdateUserResponse updateUser(String email, UpdateUserRequest request);
     List<getAllUserResponse> getAllUsers(); 
     DeleteUserResponse deleteUser(String email);
+    Optional<UUID> getIdByEmail(String email);
 }

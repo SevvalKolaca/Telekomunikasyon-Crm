@@ -2,6 +2,7 @@ package com.turkcell.user_service.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(updatedUser, UpdateUserResponse.class);
     }
 
-    @Override 
+    @Override
     public List<getAllUserResponse> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
@@ -92,5 +93,11 @@ public class UserServiceImpl implements UserService {
             return new DeleteUserResponse("User deleted successfully", LocalDateTime.now());
         }
         throw new UserException("User not found with email: " + email);
-    }    
+    }
+
+    @Override
+    public Optional<UUID> getIdByEmail(String email){
+        return userRepository.findIdByEmail(email);
+
+    }
 }

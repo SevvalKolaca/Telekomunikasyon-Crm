@@ -60,7 +60,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println("Authorization header boş ya da hatalı!");
         }
 
+        try {
+            filterChain.doFilter(request, response);
+        }
+        catch (Exception ex) {
+            System.out.println("JWT Filter içinde hata oluştu: " + ex.getMessage());
+            ex.printStackTrace(); // terminalde detaylı hatayı görmek için
+
+            // Eğer JWT ile ilgili hata varsa kullanıcıya doğrudan 403 dönebilirsin:
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "JWT geçersiz veya işlenemedi.");
+        }
         System.out.println("===== JWT FILTER END =====\n");
-        filterChain.doFilter(request, response);
+
     }
 }

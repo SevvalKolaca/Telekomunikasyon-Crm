@@ -19,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     void deleteByEmail(String email);
 
+    @Query("SELECT u.id FROM User u WHERE u.email = :email")
+    Optional<UUID> findIdByEmail(@Param("email") String email);
+
 }
