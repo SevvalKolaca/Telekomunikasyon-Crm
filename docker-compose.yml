@@ -35,6 +35,18 @@ services:
     volumes:
       - pg3_data:/var/lib/postgresql/data
 
+  contractservice:
+    image: postgres
+    container_name: "contract-service"
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=contractservice
+    volumes:
+      - contractservice_data:/var/lib/postgresql/data
+
   pg-user-service:
     image: postgres
     container_name: "pg-user-service"
@@ -122,6 +134,7 @@ volumes:
   pg1_data:
   pg2_data:
   pg3_data:
+  contractservice_data:
   mysql_data:
   pg_user_service_data:
   grafana_data:

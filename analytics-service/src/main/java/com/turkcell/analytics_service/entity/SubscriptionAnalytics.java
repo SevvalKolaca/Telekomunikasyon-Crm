@@ -45,10 +45,6 @@ public class SubscriptionAnalytics {
     private LocalDate endDate;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BillingCycle billingCycle;
-
-    @Column(nullable = false)
     private Double revenue;
 
     @Column(name = "created_at", nullable = false, updatable = false)

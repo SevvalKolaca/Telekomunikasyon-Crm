@@ -1,6 +1,5 @@
 package com.turkcell.analytics_service.dto;
 
-import com.turkcell.analytics_service.enums.Status;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -9,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import io.github.ergulberke.enums.AccountStatus;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ public class SubscriptionAnalyticsDTO {
 
     @NotNull(message = "Durum boş olamaz")
     @Pattern(regexp = "^(ACTIVE|PASSIVE)$", message = "Geçersiz durum")
-    private Status status;
+    private AccountStatus status;
 
     @NotNull(message = "Başlangıç tarihi boş olamaz")
     private LocalDate startDate;

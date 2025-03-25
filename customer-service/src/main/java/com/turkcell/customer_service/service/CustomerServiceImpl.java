@@ -18,6 +18,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     private final CustomerRepository customerRepository;
     private final CustomerBusinnessRules rules;
+    private final CustomerProducer customerProducer;
 
 
     @Override
@@ -27,6 +28,20 @@ public class CustomerServiceImpl implements CustomerService{
 
         Customer customer = buildCustomerFromRequest(request);
         Customer savedCustomer = customerRepository.save(customer);
+
+         // Create CustomerCreatedEvent
+        CustomerCreatedEvent event = new CustomerCreatedEvent(
+                savedCustomer.getId().toString(),
+                savedCustomer.getFirstName() + " " + savedCustomer.getLastName(),
+                savedCustomer.getEmail(),
+                savedCustomer.getPhone(),
+                savedCustomer.getAddress(),
+                "CREATE", // Event type
+                LocalDateTime.now());
+
+        // Send event to Kafka
+        customerProducer.sendCustomerCreatedEvent(event);
+        
         return buildCustomerResponse(savedCustomer);
     }
 

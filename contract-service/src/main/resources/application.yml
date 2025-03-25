@@ -1,8 +1,21 @@
 spring:
   application:
     name: contract-service
+  cloud:
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: contractCreatedFunction
+      bindings:
+        contractCreatedFunction-out-0:
+          destination: contract-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5434}/${DB_NAME:postgres}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5436}/${DB_NAME:contractservice}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:test}
     driver-class-name: org.postgresql.Driver
