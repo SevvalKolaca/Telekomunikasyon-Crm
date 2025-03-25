@@ -3,19 +3,14 @@ package com.turkcell.user_service.controller;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.ergulberke.jwt.JwtTokenProvider;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
 import com.turkcell.user_service.dto.create.CreatedUserResponse;
@@ -27,7 +22,7 @@ import com.turkcell.user_service.dto.update.UpdateUserResponse;
 import com.turkcell.user_service.service.UserService;
 
 
-// TODO: roller icin endpointler yazılacak!
+// TODO: security configde roler düzenlecek!
 // TODO: HATALAR DETAYLI ÇIKTILAR DONDURECEK!
 
 @RestController
@@ -36,13 +31,67 @@ import com.turkcell.user_service.service.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
     
     @Autowired 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    // Tüm kullanıcıları listeleme -> Admin, Müşteri Temsilcisi, Teknik Destek
+    @GetMapping("/getAll")
+    @ResponseStatus(HttpStatus.OK)
+    public List<getAllUserResponse> getAllUsers(){
+        return userService.getAllUsers();
+    }
 
+    // Kullanıcıyı email ile getirme ->Admin, Müşteri Temsilcisi, Teknik Destek
+    @GetMapping("/get-user/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public GetUserResponse getUserByEmail(@PathVariable String email, @RequestHeader("Authorization") String token) {
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        // token'dan id alma işlemi
+        UUID idFromToken = jwtTokenProvider.getIdFromToken(token);
+
+        UUID userId = userService.getIdByEmail(email)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("User not found with this email: "+ email));
+        if (idFromToken.equals(userId))
+            return userService.getUserByEmail(email);
+        else
+            throw new AccessDeniedException("You do not have permission to access this user's information.");
+
+    }
+
+    // ADMIN ve Müşteri temsilcisi
+    @PostMapping("/create") //create user
+    @ResponseStatus(HttpStatus.CREATED)
+    public CreatedUserResponse createUser(@RequestBody CreatedUserRequest request){
+        return userService.createUser(request);
+    }
+
+    // Kullanıcı güncelleme -> Admin ve Müşteri Temsilcisi
+    @PutMapping("/update-user/{email}") //update user
+    @ResponseStatus(HttpStatus.OK)
+    public UpdateUserResponse updateUser(@PathVariable String email, @RequestBody UpdateUserRequest request){
+        return userService.updateUser(email, request);
+    }
+
+    // Kullanıcı silme -> Sadece Admin
+    @DeleteMapping("/{email}") //delete user
+    @ResponseStatus(HttpStatus.OK)
+    public DeleteUserResponse deleteUser(@PathVariable String email){
+        return userService.deleteUser(email);
+    }
+      
+
+
+    // CONTROLLER KATMANINDA TEST AMAÇLI KODLAR -----------------------------------------------
     @GetMapping("/admin/test")
     //@PreAuthorize("hasRole('ADMIN')")  // Spring Security "ROLE_" önekini otomatik ekler
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -66,36 +115,4 @@ public class UserController {
     public ResponseEntity<String> testCustHelpAccess() {
         return ResponseEntity.ok("Customer Help access confirmed. Your JWT is valid.");
     }
-
-    @GetMapping("/getAll")
-    @ResponseStatus(HttpStatus.OK)
-    public List<getAllUserResponse> getAllUsers(){
-        return userService.getAllUsers();
-    }
-
-    @GetMapping("/{email}")
-    @ResponseStatus(HttpStatus.OK)
-    public GetUserResponse getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email);
-    }
-
-    @PostMapping //create user 
-    @ResponseStatus(HttpStatus.CREATED)
-    public CreatedUserResponse createUser(@RequestBody CreatedUserRequest request){
-        return userService.createUser(request);
-    }
-
-    @PutMapping("/{email}") //update user
-    @ResponseStatus(HttpStatus.OK)
-    public UpdateUserResponse updateUser(@PathVariable String email, @RequestBody UpdateUserRequest request){
-        return userService.updateUser(email, request);
-    }
-
-    @DeleteMapping("/{email}") //delete user
-    @ResponseStatus(HttpStatus.OK)
-    public DeleteUserResponse deleteUser(@PathVariable String email){
-        return userService.deleteUser(email);
-    }
-      
-
 }

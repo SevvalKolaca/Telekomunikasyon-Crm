@@ -47,7 +47,7 @@ public class AuthController {
         Role userRole = user.getRole();
         System.out.println("Kullanıcının Rolü: " + userRole);
 
-        String token = jwtTokenProvider.createToken(user.getEmail(), userRole);
+        String token = jwtTokenProvider.createToken(user.getId(),user.getEmail(), userRole);
         System.out.println("Üretilen Token: " + token);
         System.out.println("===== LOGIN İSTEĞİ BİTTİ =====");
 
