@@ -30,6 +30,15 @@ spring:
           destination: contract-topic
           content-type: application/json
           group: analytics-service-group
+        billCreatedFunction-in-0:
+          destination: bill-topic
+          content-type: application/json
+          group: analytics-service-group
+        userLoginFunction-in-0:
+          destination: user-topic
+          content-type: application/json
+          group: analytics-service-group
+        
       kafka:
         binder:
           brokers: localhost
