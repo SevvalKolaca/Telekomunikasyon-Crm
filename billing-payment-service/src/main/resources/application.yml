@@ -2,6 +2,19 @@ spring:
   application:
     name: "billing-payment-service"
   cloud:
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: billCreatedFunction
+      bindings:
+       billCreatedFunction-out-0:
+          destination: bill-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+
     config:
       profile: local
   config:
