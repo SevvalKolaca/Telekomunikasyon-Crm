@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.github.ergulberke.jwt.JwtTokenProvider;
+import io.github.ergulberke.model.Role;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,12 +32,10 @@ import com.turkcell.user_service.service.UserService;
 public class UserController {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
-    
+
     @Autowired 
-    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     // Tüm kullanıcıları listeleme -> Admin, Müşteri Temsilcisi, Teknik Destek
@@ -50,25 +49,10 @@ public class UserController {
     @GetMapping("/get-user/{email}")
     @ResponseStatus(HttpStatus.OK)
     public GetUserResponse getUserByEmail(@PathVariable String email, @RequestHeader("Authorization") String token) {
-
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-
-        // token'dan id alma işlemi
-        UUID idFromToken = jwtTokenProvider.getIdFromToken(token);
-
-        UUID userId = userService.getIdByEmail(email)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("User not found with this email: "+ email));
-        if (idFromToken.equals(userId))
-            return userService.getUserByEmail(email);
-        else
-            throw new AccessDeniedException("You do not have permission to access this user's information.");
-
+        return userService.authorizeAndExecute(email, token, () -> userService.getUserByEmail(email));
     }
 
-    // ADMIN ve Müşteri temsilcisi
+    // ADMIN
     @PostMapping("/create") //create user
     @ResponseStatus(HttpStatus.CREATED)
     public CreatedUserResponse createUser(@RequestBody CreatedUserRequest request){
@@ -78,8 +62,8 @@ public class UserController {
     // Kullanıcı güncelleme -> Admin ve Müşteri Temsilcisi
     @PutMapping("/update-user/{email}") //update user
     @ResponseStatus(HttpStatus.OK)
-    public UpdateUserResponse updateUser(@PathVariable String email, @RequestBody UpdateUserRequest request){
-        return userService.updateUser(email, request);
+    public UpdateUserResponse updateUser(@PathVariable String email, @RequestBody UpdateUserRequest request, @RequestHeader("Authorization") String token){
+        return userService.authorizeAndExecute(email, token, () -> userService.updateUser(email, request));
     }
 
     // Kullanıcı silme -> Sadece Admin

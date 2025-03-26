@@ -4,10 +4,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import io.github.ergulberke.jwt.JwtTokenProvider;
+import io.github.ergulberke.model.Role;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
@@ -27,11 +32,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -73,6 +80,9 @@ public class UserServiceImpl implements UserService {
         if(request.getPhone() != null) {
             user.setPhone(request.getPhone());
         }
+
+        // Güncelleme anındaki zaman
+        user.setUpdatedAt(LocalDateTime.now());
         
         User updatedUser = userRepository.save(user);
         return modelMapper.map(updatedUser, UpdateUserResponse.class);
@@ -99,5 +109,28 @@ public class UserServiceImpl implements UserService {
     public Optional<UUID> getIdByEmail(String email){
         return userRepository.findIdByEmail(email);
 
+    }
+
+    @Override
+    public <T> T authorizeAndExecute(String email, String token, Supplier<T> action){
+        // Token'dan "Bearer " kısmını kaldır
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        // Token'dan id ve rol bilgilerini al
+        UUID idFromToken = jwtTokenProvider.getIdFromToken(token);
+        Role roleFromToken = jwtTokenProvider.getRoleFromToken(token);
+
+        // Email üzerinden kullanıcı id'sini al
+        UUID userId = getIdByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with this email: " + email));
+
+        // ADMIN rolü veya token'daki id ile email'den gelen id eşleşiyorsa, istenen işlemi çalıştır.
+        if (roleFromToken == Role.ADMIN || idFromToken.equals(userId)) {
+            return action.get();
+        } else {
+            throw new AccessDeniedException("You do not have permission to access this user's information.");
+        }
     }
 }

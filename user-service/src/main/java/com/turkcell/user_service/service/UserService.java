@@ -1,4 +1,5 @@
 package com.turkcell.user_service.service;
+import java.util.function.Supplier;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,5 @@ public interface UserService {
     List<getAllUserResponse> getAllUsers(); 
     DeleteUserResponse deleteUser(String email);
     Optional<UUID> getIdByEmail(String email);
+    <T> T authorizeAndExecute(String email, String token, Supplier<T> action);
 }

@@ -43,8 +43,8 @@ public class SecurityConfig {
                         // Kullanıcı işlemleri -- GET, PUT, POST, DELETE
                         .requestMatchers(HttpMethod.GET, "/users/getAll").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.GET,"/users/get-user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE", "ROLE_TECH_SUPPORT")
-                        .requestMatchers(HttpMethod.POST,"/users/create").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE","ROLE_TECH_SUPPORT")
-                        .requestMatchers(HttpMethod.PUT,"/users/update-user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE")
+                        .requestMatchers(HttpMethod.POST,"/users/create").hasAnyAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/users/update-user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER_SERVICE","ROLE_TECH_SUPPORT")
                         .anyRequest().hasAuthority("ROLE_ADMIN")
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

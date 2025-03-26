@@ -11,7 +11,6 @@ import java.util.UUID;
 //@NoArgsConstructor
 //@AllArgsConstructor
 public class UpdateUserResponse {
-    private UUID id;
     private String firstname;
     private String lastname;
     private String email;
@@ -21,8 +20,7 @@ public class UpdateUserResponse {
 
     public UpdateUserResponse() {}
 
-    public UpdateUserResponse(UUID id, String firstname, String lastname, String email, String phone, String password, LocalDateTime updatedAt) {
-        this.id = id;
+    public UpdateUserResponse( String firstname, String lastname, String email, String phone, String password, LocalDateTime updatedAt) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -50,14 +48,6 @@ public class UpdateUserResponse {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }       
 
     public String getFirstname() {
         return firstname;
