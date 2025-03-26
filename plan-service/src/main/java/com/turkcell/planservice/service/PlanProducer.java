@@ -1,7 +1,10 @@
-package com.turkcell.plan_service.service;
+package com.turkcell.planservice.service;
 
-import io.github.ergulberke.event.plan.PlanCreatedEvent;
+import com.turkcell.planservice.event.PlanCreatedEvent;
+import com.turkcell.planservice.event.PlanUpdatedEvent;
 
 public interface PlanProducer {
     void sendPlanCreatedEvent(PlanCreatedEvent event);
+
+    void sendPlanUpdatedEvent(PlanUpdatedEvent event);
 }
