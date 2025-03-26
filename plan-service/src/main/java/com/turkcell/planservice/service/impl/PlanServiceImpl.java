@@ -11,9 +11,9 @@ import com.turkcell.planservice.event.PlanCreatedEvent;
 import com.turkcell.planservice.event.PlanUpdatedEvent;
 import com.turkcell.planservice.exception.PlanNotFoundException;
 import com.turkcell.planservice.repository.PlanRepository;
+import com.turkcell.planservice.service.PlanProducer;
 import com.turkcell.planservice.service.PlanService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,7 @@ public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
     private final ContractClient contractClient;
-    private final CustomerProducer customerProducer;
+    private final PlanProducer planProducer;
 
     @Override
     public List<PlanResponse> getAllPlans() {
@@ -76,10 +76,11 @@ public class PlanServiceImpl implements PlanService {
         plan.setSmsLimit(request.getSmsLimit());
         plan.setInternetLimit(request.getInternetLimit());
         plan.setVoiceLimit(request.getVoiceLimit());
-        
+
+        // Plan kaydediliyor
         Plan savedPlan = planRepository.save(plan);
-        
-        // Kafka event gönderimi
+
+        // PlanCreatedEvent oluşturuluyor
         PlanCreatedEvent event = new PlanCreatedEvent(
                 savedPlan.getId(),
                 savedPlan.getName(),
@@ -89,11 +90,11 @@ public class PlanServiceImpl implements PlanService {
                 savedPlan.getSmsLimit(),
                 savedPlan.getInternetLimit(),
                 savedPlan.getVoiceLimit(),
-                savedPlan.getCreatedAt()
-        );
-        
-       planProducer.sendPlanCreatedEvent(event);
-        
+                savedPlan.getCreatedAt());
+
+        // Kafka Producer ile event gönderimi
+        planProducer.sendPlanCreatedEvent(event); // Kafka'ya gönderiliyor
+
         return mapToResponse(savedPlan);
     }
 
@@ -102,37 +103,37 @@ public class PlanServiceImpl implements PlanService {
     public PlanResponse updatePlan(UpdatePlanRequest request) {
         Plan plan = planRepository.findById(request.getId())
                 .orElseThrow(() -> new PlanNotFoundException(request.getId()));
-        
+
         if (request.getName() != null) {
             plan.setName(request.getName());
         }
-        
+
         if (request.getPrice() != null) {
             plan.setPrice(request.getPrice());
         }
-        
+
         if (request.getType() != null) {
             plan.setType(request.getType());
         }
-        
+
         if (request.getStatus() != null) {
             plan.setStatus(request.getStatus());
         }
-        
+
         if (request.getSmsLimit() != null) {
             plan.setSmsLimit(request.getSmsLimit());
         }
-        
+
         if (request.getInternetLimit() != null) {
             plan.setInternetLimit(request.getInternetLimit());
         }
-        
+
         if (request.getVoiceLimit() != null) {
             plan.setVoiceLimit(request.getVoiceLimit());
         }
-        
+
         Plan updatedPlan = planRepository.save(plan);
-        
+
         // Kafka event gönderimi
         PlanUpdatedEvent event = new PlanUpdatedEvent(
                 updatedPlan.getId(),
@@ -143,11 +144,10 @@ public class PlanServiceImpl implements PlanService {
                 updatedPlan.getSmsLimit(),
                 updatedPlan.getInternetLimit(),
                 updatedPlan.getVoiceLimit(),
-                LocalDateTime.now()
-        );
-        
-        kafkaTemplate.send(PLAN_UPDATED_TOPIC, event);
-        
+                LocalDateTime.now());
+
+        planProducer.sendPlanUpdatedEvent(event);
+
         return mapToResponse(updatedPlan);
     }
 
@@ -156,15 +156,15 @@ public class PlanServiceImpl implements PlanService {
     public void deletePlan(UUID id) {
         Plan plan = planRepository.findById(id)
                 .orElseThrow(() -> new PlanNotFoundException(id));
-        
+
         // Planın aktif sözleşmeleri kontrol edilebilir
         // contractClient.getContractsByPlanId(id)
-        
+
         // Silmek yerine durumunu DEPRECATED olarak işaretleme
         plan.setStatus(PlanStatus.DEPRECATED);
         planRepository.save(plan);
     }
-    
+
     private PlanResponse mapToResponse(Plan plan) {
         return PlanResponse.builder()
                 .id(plan.getId())
@@ -179,4 +179,5 @@ public class PlanServiceImpl implements PlanService {
                 .updatedAt(plan.getUpdatedAt())
                 .build();
     }
-} 
+}
+
