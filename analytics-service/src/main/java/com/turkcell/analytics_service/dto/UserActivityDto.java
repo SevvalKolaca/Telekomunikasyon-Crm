@@ -16,7 +16,7 @@ import com.turkcell.analytics_service.enums.ActivityType;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserActivityDTO {
+public class UserActivityDto {
 
     private UUID id;
 
