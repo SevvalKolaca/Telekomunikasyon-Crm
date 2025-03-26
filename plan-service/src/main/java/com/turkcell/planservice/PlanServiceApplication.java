@@ -12,5 +12,6 @@ public class PlanServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PlanServiceApplication.class, args);
+        System.out.println("plan-service çalıştı.");
     }
 } 

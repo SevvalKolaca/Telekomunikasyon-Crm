@@ -79,4 +79,4 @@ management:
       percentiles-histogram:
         http.server.requests: true
       sla:
-        http.server.requests: 10ms, 50ms, 100ms, 200ms, 500ms 
+        http.server.requests: 10ms, 50ms, 100ms, 200ms, 500ms
