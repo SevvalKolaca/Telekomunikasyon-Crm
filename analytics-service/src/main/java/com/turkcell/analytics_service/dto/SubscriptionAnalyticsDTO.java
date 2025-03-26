@@ -16,7 +16,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubscriptionAnalyticsDTO {
+public class SubscriptionAnalyticsDto{
 
     @NotNull(message = "Plan ID boş olamaz")
     private UUID planId;
