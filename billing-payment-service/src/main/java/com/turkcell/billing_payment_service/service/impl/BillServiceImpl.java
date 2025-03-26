@@ -2,7 +2,11 @@ package com.turkcell.billing_payment_service.service.impl;
 
 import com.turkcell.billing_payment_service.entity.Bill;
 import com.turkcell.billing_payment_service.repository.BillRepository;
+import com.turkcell.billing_payment_service.service.BillProducer;
 import com.turkcell.billing_payment_service.service.BillService;
+
+import io.github.ergulberke.event.billingPayment.BillCreatedEvent;
+
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,14 +15,29 @@ import java.util.Optional;
 @Service
 public class BillServiceImpl implements BillService {
     private final BillRepository billRepository;
+    private final BillProducer billProducer;
 
-    public BillServiceImpl(BillRepository billRepository) {
+    public BillServiceImpl(BillRepository billRepository, BillProducer billProducer) {
         this.billRepository = billRepository;
+        this.billProducer = billProducer;
     }
 
     @Override
     public Bill save(Bill bill) {
-        return billRepository.save(bill);
+        Bill savedBill = billRepository.save(bill);
+
+        // Fatura oluşturulduğunda Kafka'ya mesaj gönderiliyor
+        BillCreatedEvent event = new BillCreatedEvent(
+                savedBill.getId(),
+                savedBill.getBillNumber(),
+                savedBill.getAmount(),
+                savedBill.getDueDate(),
+                savedBill.getPaymentDate(),
+                savedBill.getStatus(),
+                savedBill.getCustomerId());
+
+        billProducer.sendBillCreatedEvent(event); // Kafka'ya gönderme işlemi
+        return savedBill;
     }
 
     @Override
@@ -50,4 +69,4 @@ public class BillServiceImpl implements BillService {
     public void deleteById(Long id) {
         billRepository.deleteById(id);
     }
-} 
+}
