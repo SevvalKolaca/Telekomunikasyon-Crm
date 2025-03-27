@@ -2,17 +2,25 @@ spring:
   application:
     name: "notification-service"
   cloud:   # billing & payment  ile async iletişim
+    function:
+      definition: billingPaymentFunction;userCreatedEventConsumer
     stream:
       defaultBinder: kafka
-      function:
-        definition: billingPaymentFunction
       bindings:
         billingPaymentFunction-in-0:
           destination: billing-payment-topic
           content-type: application/json
           group: notification-group
+        userCreatedEventConsumer-in-0:
+          destination: user-created-topic
+          content-type: application/json
+          group: notification-group
+          consumer:
+            configuration:
+              spring.json.trusted.packages: io.github.ergulberke.event.user
+            auto-offset-reset: earliest
       kafka:
-        binder: 
+        binder:
           brokers: localhost:9092
   data:
     mongodb:

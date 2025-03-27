@@ -20,6 +20,10 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false  # OSIV (Open Session in View) pattern'i devre dışı bırakır
+
+  kafka:
+    bootstrap-servers: localhost:9092   # Kafka broker adresi
+
 eureka:
   client:
     serviceUrl:

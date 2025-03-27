@@ -4,14 +4,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import io.github.ergulberke.event.user.UserCreatedEvent;
 import io.github.ergulberke.jwt.JwtTokenProvider;
 import io.github.ergulberke.model.Role;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +29,9 @@ import com.turkcell.user_service.dto.update.UpdateUserResponse;
 import com.turkcell.user_service.entity.User;
 import com.turkcell.user_service.exception.UserException;
 import com.turkcell.user_service.repository.UserRepository;
+import org.springframework.kafka.core.KafkaTemplate;
 
+@Slf4j
 @Service
 //@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -33,12 +39,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final JwtTokenProvider jwtTokenProvider;
+    private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider,  KafkaTemplate<String, UserCreatedEvent> kafkaTemplate) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -49,6 +57,28 @@ public class UserServiceImpl implements UserService {
         
         User user = modelMapper.map(request, User.class);
         User savedUser = userRepository.save(user);
+
+        // Kullanıcı oluşturulduktan sonra Kafka event'ini yayınla
+        UserCreatedEvent event = new UserCreatedEvent(
+                savedUser.getId().toString(),
+                savedUser.getEmail(),
+                LocalDateTime.now()
+        );
+
+        // Kafka'ya mesaj gönderirken CompletableFuture ile callback:
+        CompletableFuture<SendResult<String, UserCreatedEvent>> future =
+                kafkaTemplate.send("user-created-topic", event);
+
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                log.info("Mesaj başarıyla gönderildi. Offset: {}",
+                        result.getRecordMetadata().offset());
+            } else {
+                log.error("Mesaj gönderilirken hata oluştu", ex);
+            }
+        });
+
+        log.info("UserCreatedEvent Kafka'ya gönderildi: {}", event);
 
         return modelMapper.map(savedUser, CreatedUserResponse.class);
     }
