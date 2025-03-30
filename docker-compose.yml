@@ -59,6 +59,21 @@ services:
     volumes:
       - pg_user_service_data:/var/lib/postgresql/data
 
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: "user-service"
+    ports:
+      - "8081:8080"
+    depends_on:
+      - pg-user-service
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-user-service:5432/userservice
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: test
+
   kafka:
     image: bitnami/kafka
     container_name: "kafka"
