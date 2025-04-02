@@ -30,20 +30,24 @@ public class CustomerServiceImpl implements CustomerService{
         Customer savedCustomer = customerRepository.save(customer);
 
          // Create CustomerCreatedEvent
-        CustomerCreatedEvent event = new CustomerCreatedEvent(
-                savedCustomer.getId().toString(),
-                savedCustomer.getFirstName() + " " + savedCustomer.getLastName(),
-                savedCustomer.getEmail(),
-                savedCustomer.getPhone(),
-                savedCustomer.getAddress(),
-                "CREATE", // Event type
-                LocalDateTime.now());
+       CustomerCreatedEvent event = CustomerCreatedEvent.builder()
+                .customerId(savedCustomer.getId())
+                .firstName(savedCustomer.getFirstName())
+                .lastName(savedCustomer.getLastName())
+                .email(savedCustomer.getEmail())
+                .phone(savedCustomer.getPhone())
+                .address(savedCustomer.getAddress())
+                .status(savedCustomer.getAccountStatus().toString())
+                .eventType("CREATE")
+                .timestamp(LocalDateTime.now())
+                .build();
 
         // Send event to Kafka
         customerProducer.sendCustomerCreatedEvent(event);
-        
+
         return buildCustomerResponse(savedCustomer);
     }
+
 
     @Override
     public CustomerResponse getCustomerById(UUID id) {
