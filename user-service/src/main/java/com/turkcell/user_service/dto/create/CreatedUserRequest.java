@@ -1,5 +1,6 @@
 package com.turkcell.user_service.dto.create;
 
+import io.github.ergulberke.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,15 +16,17 @@ public class CreatedUserRequest {
     private String email;
     private String password;
     private String phone;
+    private Role role;
 
     public CreatedUserRequest() {}
 
-    public CreatedUserRequest(String firstname, String lastname, String email, String password, String phone) {
+    public CreatedUserRequest(String firstname, String lastname, String email, String password, String phone, Role role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.role = role;
     }   
     public String getFirstname() {
         return firstname;
@@ -63,5 +66,13 @@ public class CreatedUserRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

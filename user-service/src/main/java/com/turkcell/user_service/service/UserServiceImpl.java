@@ -30,6 +30,7 @@ import com.turkcell.user_service.entity.User;
 import com.turkcell.user_service.exception.UserException;
 import com.turkcell.user_service.repository.UserRepository;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -127,6 +128,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public DeleteUserResponse deleteUser(String email) {
         if(userRepository.existsByEmail(email)) {
             userRepository.deleteByEmail(email);
