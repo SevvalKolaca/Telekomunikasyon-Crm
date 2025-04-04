@@ -6,6 +6,7 @@ import com.turkcell.user_service.repository.UserRepository;
 import io.github.ergulberke.jwt.JwtTokenProvider;
 import io.github.ergulberke.model.Role;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ public class AuthController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthController(JwtTokenProvider jwtTokenProvider, UserRepository userRepository) {
+    public AuthController(JwtTokenProvider jwtTokenProvider, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
@@ -39,7 +42,8 @@ public class AuthController {
         User user = userOptional.get();
         System.out.println("Bulunan Kullanıcı: " + user.getEmail() + " - Şifre: " + user.getPassword());
 
-        if (!user.getPassword().equals(loginRequest.getPassword())) {
+        // Düz metin şifreyi, veritabanındaki hash'lenmiş şifre ile karşılaştırın
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             System.out.println("Şifreler uyuşmuyor!");
             return ResponseEntity.status(401).body("Invalid credentials");
         }
