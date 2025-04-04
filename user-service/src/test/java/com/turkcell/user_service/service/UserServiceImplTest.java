@@ -1,5 +1,6 @@
 package com.turkcell.user_service.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
 import com.turkcell.user_service.dto.create.CreatedUserResponse;
 import com.turkcell.user_service.dto.delete.DeleteUserResponse;
@@ -256,5 +257,14 @@ public class UserServiceImplTest {
         Supplier<String> action = () -> "Executed";
         assertThrows(AccessDeniedException.class, () ->
                 userService.authorizeAndExecute(email, token, action));
+    }
+
+    @Test
+    public void testEnumConversion() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        // Enum değeri JSON içinde metin olarak gönderiliyor
+        String json = "{\"role\": \"ADMIN\"}";
+        Role role = mapper.readValue(json, Role.class);
+        assertEquals(Role.ADMIN, role);
     }
 }
