@@ -3,11 +3,11 @@ package com.turkcell.user_service.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
 import com.turkcell.user_service.dto.create.CreatedUserResponse;
-import com.turkcell.user_service.dto.delete.DeleteUserResponse;
 import com.turkcell.user_service.dto.get.GetUserResponse;
 import com.turkcell.user_service.dto.getAll.getAllUserResponse;
 import com.turkcell.user_service.dto.update.UpdateUserRequest;
 import com.turkcell.user_service.dto.update.UpdateUserResponse;
+import com.turkcell.user_service.entity.User;
 import com.turkcell.user_service.repository.UserRepository;
 import io.github.ergulberke.event.user.UserCreatedEvent;
 import io.github.ergulberke.jwt.JwtTokenProvider;
@@ -24,19 +24,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.messaging.Message;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.RestClientException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-@Import({UserServiceIntegrationTest.DummyJwtTokenProviderConfig.class})
+@Import({UserServiceIntegrationTest.DummyJwtTokenProviderConfig.class, UserServiceIntegrationTest.DummyPasswordEncoderConfig.class})
 public class UserServiceIntegrationTest {
 
     @Autowired
@@ -72,10 +72,16 @@ public class UserServiceIntegrationTest {
         ResponseEntity<CreatedUserResponse> response =
                 restTemplate.postForEntity("/users/create", request, CreatedUserResponse.class);
 
+        // API'nin 201 CREATED dönmesi beklenir.
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         CreatedUserResponse createdUser = response.getBody();
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.getEmail()).isEqualTo("alice@example.com");
+
+        // Repository üzerinden çekerek şifrenin encode edilmiş olduğunu doğrulayın.
+        User savedUser = userRepository.findByEmail("alice@example.com").orElseThrow();
+        // Beklenen: "encoded-secret"
+        assertThat(savedUser.getPassword()).isEqualTo("encoded-secret");
     }
 
     // 2. Duplicate kullanıcı oluşturma: hata senaryosu
@@ -174,7 +180,7 @@ public class UserServiceIntegrationTest {
         updateReq.setFirstname("Franklin");
         updateReq.setLastname("Sinatra");
         updateReq.setEmail("frank@example.com");
-        updateReq.setPassword("newsecret");
+        updateReq.setPassword("newpassword");
         updateReq.setPhone("555-4444");
 
         HttpHeaders headers = new HttpHeaders();
@@ -185,9 +191,14 @@ public class UserServiceIntegrationTest {
                 restTemplate.exchange("/users/update-user/frank@example.com", HttpMethod.PUT, entity, UpdateUserResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        UpdateUserResponse updatedUser = response.getBody();
-        assertThat(updatedUser).isNotNull();
-        assertThat(updatedUser.getFirstname()).isEqualTo("Franklin");
+        UpdateUserResponse updatedResponse = response.getBody();
+        assertThat(updatedResponse).isNotNull();
+        assertThat(updatedResponse.getEmail()).isEqualTo("frank@example.com");
+
+        // Repository üzerinden güncellenmiş kullanıcıyı sorgulayalım.
+        User updatedUser = userRepository.findByEmail("frank@example.com").orElseThrow();
+        // Güncelleme isteğinde "newpassword" gönderildiği için, beklenen encode edilmiş şifre: "encoded-newpassword"
+        assertThat(updatedUser.getPassword()).isEqualTo("encoded-newpassword");
     }
 
     // 7. Kullanıcı güncelleme: Authorization header eksik
@@ -362,6 +373,26 @@ public class UserServiceIntegrationTest {
                         return Role.CUSTOMER_SERVICE;
                     }
                     return null;
+                }
+            };
+        }
+    }
+
+    @TestConfiguration
+    static class DummyPasswordEncoderConfig {
+
+        @Bean
+        public BCryptPasswordEncoder passwordEncoder() {
+            return new BCryptPasswordEncoder() {
+                @Override
+                public String encode(CharSequence rawPassword) {
+                    // Gelen şifrenin başına "encoded-" ekleyelim.
+                    return "encoded-" + rawPassword;
+                }
+
+                @Override
+                public boolean matches(CharSequence rawPassword, String encodedPassword) {
+                    return encodedPassword.equals(encode(rawPassword));
                 }
             };
         }

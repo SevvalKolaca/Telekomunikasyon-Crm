@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.user_service.dto.create.CreatedUserRequest;
@@ -41,13 +42,15 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final JwtTokenProvider jwtTokenProvider;
     private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider,  KafkaTemplate<String, UserCreatedEvent> kafkaTemplate) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, JwtTokenProvider jwtTokenProvider,  KafkaTemplate<String, UserCreatedEvent> kafkaTemplate, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.jwtTokenProvider = jwtTokenProvider;
         this.kafkaTemplate = kafkaTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -55,7 +58,11 @@ public class UserServiceImpl implements UserService {
         if(userRepository.existsByEmail(request.getEmail())) {
             throw new UserException("User already exists");
         }
-        
+
+        // Şifrenin encode edilmesi
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        request.setPassword(encodedPassword);
+
         User user = modelMapper.map(request, User.class);
         User savedUser = userRepository.save(user);
 
@@ -106,7 +113,8 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
         }
         if(request.getPassword() != null) {
-            user.setPassword(request.getPassword());
+            // Yeni şifrenin encode edilmesi
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
         if(request.getPhone() != null) {
             user.setPhone(request.getPhone());
