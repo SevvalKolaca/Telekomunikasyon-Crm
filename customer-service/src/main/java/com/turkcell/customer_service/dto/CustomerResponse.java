@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,4 +27,8 @@ public class CustomerResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private AccountStatus accountStatus;
+    private UUID planId;
+    private String planName;
+    private LocalDate planStartDate;
+    private LocalDate planEndDate;
 }

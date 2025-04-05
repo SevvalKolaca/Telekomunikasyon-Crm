@@ -1,13 +1,19 @@
 package com.turkcell.customer_service.service;
 
+import com.turkcell.customer_service.client.PlanServiceClient;
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
+import com.turkcell.customer_service.dto.Plan.PlanResponse;
 import com.turkcell.customer_service.entity.Customer;
 import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinnessRules;
+import io.github.ergulberke.event.customer.CustomerCreatedEvent;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +25,7 @@ public class CustomerServiceImpl implements CustomerService{
     private final CustomerRepository customerRepository;
     private final CustomerBusinnessRules rules;
     private final CustomerProducer customerProducer;
+    private final PlanServiceClient planServiceClient;
 
 
     @Override
@@ -93,6 +100,36 @@ public class CustomerServiceImpl implements CustomerService{
         rules.checkIfCustomerExistsById(id);
         customerRepository.deleteById(id);
     }
+    @Override
+    @Transactional
+    public CustomerResponse changeCustomerPlan(UUID customerId, UUID newPlanId, String reason) {
+        // Müşteriyi bul
+        Customer customer = rules.findCustomerByIdOrThrow(customerId);
+
+        // Plan Service'den yeni planın detaylarını al
+        PlanResponse newPlan = planServiceClient.getPlanById(newPlanId).getBody();
+        if (newPlan == null) {
+            throw new RuntimeException("Plan not found with ID: " + newPlanId);
+        }
+
+        // Plan'ın aktif olup olmadığını kontrol et
+        if (!planServiceClient.isPlanActive(newPlanId).getBody()) {
+            throw new RuntimeException("Plan is not active: " + newPlanId);
+        }
+
+        // Eski plan bilgilerini sakla
+        UUID oldPlanId = customer.getPlanId();
+        String oldPlanName = customer.getPlanName();
+
+        // Customer entity'sini güncelle
+        customer.setPlanId(newPlanId);
+        customer.setPlanName(newPlan.getName());
+        customer.setPlanStartDate(LocalDate.now());
+        customer.setPlanEndDate(LocalDate.now().plusMonths(newPlan.getDurationInMonths()));
+
+        Customer updatedCustomer = customerRepository.save(customer);
+        return buildCustomerResponse(updatedCustomer);
+    }
 
     private Customer buildCustomerFromRequest(CustomerRequest request) {
         return Customer.builder()
@@ -101,6 +138,10 @@ public class CustomerServiceImpl implements CustomerService{
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .address(request.getAddress())
+                .planId(request.getPlanId())
+                .planName(request.getPlanName())
+                .planStartDate(request.getPlanStartDate())
+                .planEndDate(request.getPlanEndDate())
                 .build();
     }
 
@@ -114,6 +155,13 @@ public class CustomerServiceImpl implements CustomerService{
                 .address(customer.getAddress())
                 .createdAt(customer.getCreatedAt())
                 .updatedAt(customer.getUpdatedAt())
+                .accountStatus(customer.getAccountStatus())
+                .planId(customer.getPlanId())
+                .planName(customer.getPlanName())
+                .planStartDate(customer.getPlanStartDate())
+                .planEndDate(customer.getPlanEndDate())
                 .build();
     }
+
+
 }

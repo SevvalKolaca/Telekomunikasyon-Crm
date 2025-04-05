@@ -1,5 +1,13 @@
 package com.turkcell.planservice.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.turkcell.planservice.client.ContractClient;
 import com.turkcell.planservice.dto.request.CreatePlanRequest;
 import com.turkcell.planservice.dto.request.UpdatePlanRequest;
@@ -13,14 +21,8 @@ import com.turkcell.planservice.exception.PlanNotFoundException;
 import com.turkcell.planservice.repository.PlanRepository;
 import com.turkcell.planservice.service.PlanProducer;
 import com.turkcell.planservice.service.PlanService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -163,6 +165,13 @@ public class PlanServiceImpl implements PlanService {
         // Silmek yerine durumunu DEPRECATED olarak işaretleme
         plan.setStatus(PlanStatus.DEPRECATED);
         planRepository.save(plan);
+    }
+
+    @Override
+    public boolean isPlanActive(UUID id) {
+        Plan plan = planRepository.findById(id)
+                .orElseThrow(() -> new PlanNotFoundException(id));
+        return plan.getStatus() == PlanStatus.ACTIVE;
     }
 
     private PlanResponse mapToResponse(Plan plan) {
