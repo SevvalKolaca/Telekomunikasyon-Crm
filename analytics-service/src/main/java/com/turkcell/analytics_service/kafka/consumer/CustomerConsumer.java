@@ -25,24 +25,20 @@ public class CustomerConsumer {
     public Consumer<CustomerCreatedEvent> customerCreatedFunction() {
         return event -> {
             try {
+                // Null kontrolü ekle
+                if (event == null) {
+                    log.warn("Null müşteri olayı alındı, işleme atlanıyor");
+                    return;
+                }
+
                 log.info("📩 Customer Created Event received: {}", event.getCustomerId());
 
-                // UserActivityDto oluşturuluyor
-                UserActivityDto activityDto = new UserActivityDto();
-                activityDto.setUserId((event.getCustomerId())); // Müşteri ID'si
-                activityDto.setActivityType(ActivityType.CUSTOMER_CREATED); // Aktivite tipi
-                activityDto.setDescription("A new customer was created.");
-                activityDto.setTimestamp(LocalDateTime.now()); // Aktivite zaman bilgisi
-                activityDto.setIpAddress("127.0.0.1"); // Örnek IP adresi
-                activityDto.setUserAgent("Mozilla/5.0"); // Örnek user-agent
-                activityDto.setSessionId(UUID.randomUUID().toString()); // Session ID
-
                 // UserActivityService'e kaydediyoruz
-                userActivityService.logActivity(activityDto);
+                userActivityService.logCustomerCreatedActivity(event);
 
                 log.info("✅ Customer event successfully processed: {}", event.getCustomerId());
             } catch (Exception e) {
-                log.error("❌ Customer event processing failed: {}", event.getCustomerId(), e);
+                log.error("❌ Customer event processing failed: {}", event != null ? event.getCustomerId() : "null", e);
             }
         };
     }

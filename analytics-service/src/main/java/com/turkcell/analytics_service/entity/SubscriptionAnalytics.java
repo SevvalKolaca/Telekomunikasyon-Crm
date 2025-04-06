@@ -1,12 +1,12 @@
 package com.turkcell.analytics_service.entity;
 
+import io.github.ergulberke.enums.PlanStatus;
+import io.github.ergulberke.enums.PlanType;
 import io.github.ergulberke.enums.AccountStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -20,47 +20,73 @@ import java.util.UUID;
 public class SubscriptionAnalytics {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
+    // Genel Plan Bilgileri
+    @Column(name = "plan_id")
     private UUID planId;
 
-    @Column(nullable = false)
+    @Column(name = "plan_name")
     private String planName;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private PlanType type;
+
+    @Column(name = "status")
+    private String status; // Object tipinden String'e değiştirildi
+
+    @Column(name = "billing_cycle")
+    private String billingCycle; // Fatura döngüsü: aylık/yıllık
+
+    // İhtiyaç olursa ayrı olarak enum statüsleri
+    @Transient
+    private PlanStatus planStatus;
+
+    @Transient
+    private AccountStatus accountStatus;
+
+    // Limit Bilgileri (Plan bazlı)
+    @Column(name = "sms_limit")
+    private Integer smsLimit;
+
+    @Column(name = "internet_limit")
+    private Integer internetLimit;
+
+    @Column(name = "voice_limit")
+    private Integer voiceLimit;
+
+    // Analitik Veriler
+    @Column(name = "new_subscriptions")
     private Integer newSubscriptions;
 
-    @Column(nullable = false)
+    @Column(name = "canceled_subscriptions")
     private Integer canceledSubscriptions;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    @Column(name = "revenue", precision = 10, scale = 2)
+    private BigDecimal revenue;
 
-    @Column(nullable = false)
+    // Tarihler
+    @Column(name = "start_date")
     private LocalDate startDate;
 
+    @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Column(nullable = false)
-    private Double revenue;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
+    // Eğer createdAt gibi zaman damgası istiyorsan:
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+    // PlanStatus veya AccountStatus tipini status alanına aktarmak için yardımcı
+    // metodlar
+    public void setPlanStatus(PlanStatus planStatus) {
+        this.planStatus = planStatus;
+        this.status = planStatus.name();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public void setAccountStatus(AccountStatus accountStatus) {
+        this.accountStatus = accountStatus;
+        this.status = accountStatus.name();
     }
 }

@@ -4,5 +4,5 @@ public enum ActivityType {
     LOGIN,
     LOGOUT,
     PAGE_VIEW,
-    SEARCH,
+    SEARCH, USER_LOGIN, CUSTOMER_CREATED,
 }

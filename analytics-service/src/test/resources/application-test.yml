@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: ''
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  cloud:
+    function:
+      definition: userLoginFunction;customerCreatedFunction
+    stream:
+      default:
+        contentType: application/json
+      bindings:
+        userLoginFunction-in-0:
+          destination: user-logins
+        customerCreatedFunction-in-0:
+          destination: customers
+        input:
+          destination: test-topic
+          group: test-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+          autoCreateTopics: true
+  security:
+    user:
+      name: test
+      password: test
+      roles: USER,ADMIN
+
+logging:
+  level:
+    com.turkcell.analytics_service: DEBUG
+    org.springframework.cloud.stream: DEBUG
+
+eureka:
+  client:
+    enabled: false
+
+spring.cloud.discovery.enabled: false 

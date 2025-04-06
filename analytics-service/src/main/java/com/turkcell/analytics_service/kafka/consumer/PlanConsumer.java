@@ -21,11 +21,11 @@ public class PlanConsumer {
     public Consumer<PlanCreatedEvent> planCreatedFunction() {
         return event -> {
             try {
-                log.info("📩 Plan Created Event received: {}", event.getPlanId());
+                log.info("📩 Plan Created Event received: {}", event.getId());
                 subscriptionAnalyticsService.savePlanAnalytics(event);
-                log.info("✅ Plan event successfully processed: {}", event.getPlanId());
+                log.info("✅ Plan event successfully processed: {}", event.getId());
             } catch (Exception e) {
-                log.error("❌ Plan event processing failed: {}", event.getPlanId(), e);
+                log.error("❌ Plan event processing failed: {}", event.getId(), e);
             }
         };
     }

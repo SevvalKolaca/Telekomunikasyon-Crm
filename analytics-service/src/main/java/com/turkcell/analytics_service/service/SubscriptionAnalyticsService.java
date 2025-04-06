@@ -13,4 +13,5 @@ public interface SubscriptionAnalyticsService {
     void processBillingEvent(BillCreatedEvent event);
 
     void savePlanAnalytics(PlanCreatedEvent event);
+
 }

@@ -4,9 +4,13 @@ import org.springframework.stereotype.Service;
 import com.turkcell.analytics_service.entity.SubscriptionAnalytics;
 import com.turkcell.analytics_service.repository.SubscriptionAnalyticsRepository;
 import com.turkcell.analytics_service.service.SubscriptionAnalyticsService;
+
+import io.github.ergulberke.enums.AccountStatus;
 import io.github.ergulberke.event.billingPayment.BillCreatedEvent;
 import io.github.ergulberke.event.contract.ContractCreatedEvent;
 import io.github.ergulberke.event.plan.PlanCreatedEvent;
+
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +36,11 @@ public class SubscriptionAnalyticsServiceImpl implements SubscriptionAnalyticsSe
             analytics.setPlanName("Plan - " + event.getPlanId());
             analytics.setNewSubscriptions(1); // Yeni abonelik olarak işaretliyoruz
             analytics.setCanceledSubscriptions(0);
-            analytics.setStatus(event.getStatus());
+            analytics.setAccountStatus(AccountStatus.valueOf(event.getStatus()));
             analytics.setStartDate(event.getStartDate().toLocalDate());
             analytics.setEndDate(event.getEndDate().toLocalDate());
-            analytics.setRevenue(event.getPrice());
+            analytics.setRevenue(BigDecimal.valueOf(event.getPrice()));
+            analytics.setBillingCycle("MONTHLY"); // Varsayılan değer
 
             subscriptionAnalyticsRepository.save(analytics);
 
@@ -56,10 +61,11 @@ public class SubscriptionAnalyticsServiceImpl implements SubscriptionAnalyticsSe
             analytics.setPlanName("Billing Data");
             analytics.setNewSubscriptions(0);
             analytics.setCanceledSubscriptions(0);
-            analytics.setStatus(event.getStatus()); // Ödeme durumu
+            analytics.setAccountStatus(AccountStatus.valueOf(event.getStatus())); // Ödeme durumu
             analytics.setStartDate(event.getDueDate()); // Son ödeme tarihi
             analytics.setEndDate(event.getPaymentDate()); // Gerçek ödeme tarihi
-            analytics.setRevenue(event.getAmount()); // Fatura tutarı
+            analytics.setRevenue(BigDecimal.valueOf(event.getAmount())); // Fatura tutarı
+            analytics.setBillingCycle("MONTHLY"); // Varsayılan değer
 
             subscriptionAnalyticsRepository.save(analytics);
 
@@ -72,24 +78,27 @@ public class SubscriptionAnalyticsServiceImpl implements SubscriptionAnalyticsSe
     @Override
     public void savePlanAnalytics(PlanCreatedEvent event) {
         try {
-            // Plan analytics verisini kaydediyoruz
             SubscriptionAnalytics analytics = new SubscriptionAnalytics();
-            analytics.setPlanId(event.getPlanId());
-            analytics.setPlanName("Plan - " + event.getPlanId());
-            analytics.setNewSubscriptions(1); // Yeni abonelik olarak işaretliyoruz
-            analytics.setCanceledSubscriptions(0); // Başlangıçta iptal yok
-            analytics.setStatus(event.getStatus());
-            analytics.setStartDate(event.getStartDate().toLocalDate());
-            analytics.setEndDate(event.getEndDate().toLocalDate());
+            analytics.setPlanId(event.getId());
+            analytics.setPlanName(event.getName());
             analytics.setRevenue(event.getPrice());
+            analytics.setType(event.getType());
+            analytics.setPlanStatus(event.getStatus());
 
-            // Subscription analytics verisini veritabanına kaydediyoruz
+            analytics.setSmsLimit(event.getSmsLimit());
+            analytics.setInternetLimit(event.getInternetLimit());
+            analytics.setVoiceLimit(event.getVoiceLimit());
+
+            analytics.setNewSubscriptions(1); // Yeni plan ilk kez oluşturulmuş, başlangıç olarak 1
+            analytics.setCanceledSubscriptions(0); // Henüz iptal edilmemiş
+            analytics.setEndDate(null); // Bitiş tarihi belli değil
+            analytics.setBillingCycle(event.getType().name().contains("MONTHLY") ? "MONTHLY" : "YEARLY");
+
             subscriptionAnalyticsRepository.save(analytics);
 
-            System.out.println("✅ Subscription analytics saved for Plan ID: " + event.getPlanId());
+            log.info("✅ Subscription analytics saved for Plan ID: {}", event.getId());
         } catch (Exception e) {
-            System.err.println("❌ Failed to save plan analytics: " + event.getPlanId());
-            e.printStackTrace();
+            log.error("❌ Failed to save plan analytics: {}", event.getId(), e);
         }
     }
 }
