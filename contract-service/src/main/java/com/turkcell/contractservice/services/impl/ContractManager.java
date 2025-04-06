@@ -13,6 +13,7 @@ import com.turkcell.contractservice.dtos.responses.GetContractResponse;
 import com.turkcell.contractservice.entities.Contract;
 import com.turkcell.contractservice.entities.enums.ContractStatus;
 import com.turkcell.contractservice.repositories.ContractRepository;
+import com.turkcell.contractservice.services.ContractProducer;
 import com.turkcell.contractservice.services.ContractService;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +23,8 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ContractManager implements ContractService {
     private final ContractRepository repository;
+    private final ContractProducer contractProducer;
+
 
     @Override
     public void add(CreateContractRequest request) {
