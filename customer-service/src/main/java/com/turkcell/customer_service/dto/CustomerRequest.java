@@ -4,10 +4,14 @@ import com.turkcell.customer_service.enums.AccountStatus;
 import com.turkcell.customer_service.validation.TurkishPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -29,6 +33,18 @@ public class CustomerRequest {
     private String phone;
 
     private String address;
+
+    @NotNull(message = "Plan ID cannot be null")
+    private UUID planId;
+
+    @NotBlank(message = "Plan name cannot be blank")
+    private String planName;
+
+    @NotNull(message = "Plan start date cannot be null")
+    private LocalDate planStartDate;
+
+    @NotNull(message = "Plan end date cannot be null")
+    private LocalDate planEndDate;
 
     //private AccountStatus accountStatus;
 }

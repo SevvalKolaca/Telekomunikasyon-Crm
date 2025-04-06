@@ -40,3 +40,7 @@ eureka:
     hostname: localhost
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
+
+plan:
+  service:
+    url: http://localhost:8084

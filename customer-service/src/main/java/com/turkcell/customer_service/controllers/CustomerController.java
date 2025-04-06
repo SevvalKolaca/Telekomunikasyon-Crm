@@ -51,4 +51,12 @@ public class CustomerController {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<CustomerResponse> changeCustomerPlan(
+            @PathVariable UUID id,
+            @RequestParam UUID newPlanId,
+            @RequestParam String reason) {
+        return ResponseEntity.ok(customerService.changeCustomerPlan(id, newPlanId, reason));
+    }
 }

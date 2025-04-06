@@ -1,20 +1,29 @@
 package com.turkcell.planservice.controller;
 
-import com.turkcell.planservice.dto.request.CreatePlanRequest;
-import com.turkcell.planservice.dto.response.PlanResponse;
-import com.turkcell.planservice.dto.request.UpdatePlanRequest;
-import com.turkcell.planservice.enums.PlanStatus;
-import com.turkcell.planservice.enums.PlanType;
-import com.turkcell.planservice.service.PlanService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.UUID;
+import com.turkcell.planservice.dto.request.CreatePlanRequest;
+import com.turkcell.planservice.dto.request.UpdatePlanRequest;
+import com.turkcell.planservice.dto.response.PlanResponse;
+import com.turkcell.planservice.enums.PlanStatus;
+import com.turkcell.planservice.enums.PlanType;
+import com.turkcell.planservice.service.PlanService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/plans")
@@ -68,5 +77,10 @@ public class PlanController {
     public ResponseEntity<Void> deletePlan(@PathVariable UUID id) {
         planService.deletePlan(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/active")
+    public ResponseEntity<Boolean> isPlanActive(@PathVariable UUID id) {
+        return ResponseEntity.ok(planService.isPlanActive(id));
     }
 } 

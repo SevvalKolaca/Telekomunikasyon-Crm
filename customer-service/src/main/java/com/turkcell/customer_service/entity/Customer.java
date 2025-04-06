@@ -44,16 +44,36 @@ public class Customer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "plan_id")
+    private UUID planId;
+
+    @Column(name = "plan_name")
+    private String planName;
+
+    @Column(name = "plan_start_date")
+    private LocalDate planStartDate;
+
+    @Column(name = "plan_end_date")
+    private LocalDate planEndDate;
+
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         if (accountStatus == null) { // Eğer dışarıdan bir değer atanmadıysa
-            accountStatus = AccountStatus.PENDING; //varsıyal olarak PENDING başlasın
+            accountStatus = AccountStatus.ACTIVE; //varsıyal olarak ACTIVE başlasın
         }
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    // TODO: müşteri kayıtlarını tamamen silmesek?? elimizde eski müşterilerin
+    //  kayıtlarını tutmak mantıklı olabilir bu şekilde durum ataması ile kontrol sağlayabiliriz
+    @PreRemove
+    protected void onRemove() {
+        accountStatus = AccountStatus.CLOSED; // Müşteri silinmeden önce durum CLOSED olarak değişir
     }
 }

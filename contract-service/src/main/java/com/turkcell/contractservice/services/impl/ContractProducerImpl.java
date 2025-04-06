@@ -8,7 +8,6 @@ public class ContractProducerImpl {
     @Autowired
     private StreamBridge streamBridge;
 
-    @Override
     public void sendContractCreatedEvent(ContractCreatedEvent event) {
         boolean result = streamBridge.send("contractCreatedFunction-out-0", event);
         if (result) {
