@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.List;
 
 @Repository
-public interface SubscriptionAnalyticsRepository extends JpaRepository<SubscriptionAnalytics, UUID> {
+public interface SubscriptionAnalyticsRepository extends JpaRepository<SubscriptionAnalytics, Long> {
 
     // Plan ID'ye göre tüm abonelik analitiğini bulma
     List<SubscriptionAnalytics> findByPlanId(UUID planId);
