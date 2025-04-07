@@ -82,6 +82,17 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-2:5433/postgres
 
+  analytics-service:
+    image: turkcell-analytics-service
+    container_name: analytics_service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
   notification-service:
     image: turkcell-notification-service
     container_name: notification_service

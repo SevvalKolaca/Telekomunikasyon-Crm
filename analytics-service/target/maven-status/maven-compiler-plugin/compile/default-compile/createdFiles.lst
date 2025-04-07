@@ -1,4 +1,5 @@
 com\turkcell\analytics_service\dto\UserActivityDto.class
+com\turkcell\analytics_service\service\impl\SubscriptionAnalyticsServiceImpl.class
 com\turkcell\analytics_service\dto\SubscriptionAnalyticsDto.class
 com\turkcell\analytics_service\kafka\consumer\BillingConsumer.class
 com\turkcell\analytics_service\entity\SubscriptionAnalytics.class
@@ -14,6 +15,7 @@ com\turkcell\analytics_service\service\impl\UserActivityServiceImpl.class
 com\turkcell\analytics_service\AnalyticsServiceApplication.class
 com\turkcell\analytics_service\entity\SubscriptionAnalytics$SubscriptionAnalyticsBuilder.class
 com\turkcell\analytics_service\entity\UserActivity$UserActivityBuilder.class
+com\turkcell\analytics_service\config\SecurityConfig.class
 com\turkcell\analytics_service\service\SubscriptionAnalyticsService.class
 com\turkcell\analytics_service\kafka\consumer\PlanConsumer.class
 com\turkcell\analytics_service\enums\ActivityType.class

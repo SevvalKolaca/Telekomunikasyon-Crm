@@ -25,4 +25,5 @@ public class PlanCreatedEvent {
     private Integer internetLimit;
     private Integer voiceLimit;
     private LocalDateTime createdAt;
+
 }
