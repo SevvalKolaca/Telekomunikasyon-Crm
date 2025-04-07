@@ -1,4 +1,4 @@
-package com.turkcell.customer_service.controllers;
+package com.turkcell.customer_service.controller;
 
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
@@ -59,4 +59,4 @@ public class CustomerController {
             @RequestParam String reason) {
         return ResponseEntity.ok(customerService.changeCustomerPlan(id, newPlanId, reason));
     }
-}
+} 

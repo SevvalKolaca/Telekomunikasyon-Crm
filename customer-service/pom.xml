@@ -52,7 +52,6 @@
 			<artifactId>swagger-annotations</artifactId>
 			<version>2.2.28</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
@@ -86,11 +85,6 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.github.ergulberke</groupId>
-			<artifactId>turkcell-t2</artifactId>
-			<version>2.1.4</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
@@ -103,6 +97,12 @@
 			<groupId>io.github.ergulberke</groupId>
 			<artifactId>turkcell-t2</artifactId>
 			<version>2.1.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.turkcell</groupId>
+			<artifactId>contract-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
