@@ -1,6 +1,7 @@
 package com.turkcell.customer_service.entity;
 
 import com.turkcell.customer_service.enums.AccountStatus;
+import com.turkcell.contractservice.entities.enums.BillingPlan;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
@@ -56,6 +57,9 @@ public class Customer {
     @Column(name = "plan_end_date")
     private LocalDate planEndDate;
 
+    @Column(name = "billing_plan")
+    @Enumerated(EnumType.STRING)
+    private BillingPlan billingPlan;
 
     @PrePersist
     protected void onCreate() {
