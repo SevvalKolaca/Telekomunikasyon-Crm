@@ -1,6 +1,18 @@
 spring:
   application:
     name: "billing-payment-service"
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: test
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
   cloud:
     stream:
       defaultBinder: kafka
