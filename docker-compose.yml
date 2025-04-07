@@ -87,7 +87,12 @@ services:
     container_name: notification_service
     ports:
       - "8088:8088"
-
+    depends_on:
+      - mongo
+      - kafka
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongo:27017/notification_db?authSource=admin
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
   kafka:
     image: bitnami/kafka
