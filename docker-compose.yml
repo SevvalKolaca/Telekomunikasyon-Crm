@@ -73,6 +73,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-user-service:5432/userservice
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: test
+
   billing-payment-service:
     image: turkcell-billing-payment-service
     container_name: billing_payment_service
@@ -80,6 +81,12 @@ services:
       - "8085:8085"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-2:5433/postgres
+
+  notification-service:
+    image: turkcell-notification-service
+    container_name: notification_service
+    ports:
+      - "8088:8088"
 
   kafka:
     image: bitnami/kafka
