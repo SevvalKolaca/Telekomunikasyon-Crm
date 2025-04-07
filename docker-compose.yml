@@ -88,6 +88,7 @@ services:
     ports:
       - "8088:8088"
 
+
   kafka:
     image: bitnami/kafka
     container_name: "kafka"
