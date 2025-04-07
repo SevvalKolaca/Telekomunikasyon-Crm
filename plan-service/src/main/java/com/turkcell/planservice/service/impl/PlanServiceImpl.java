@@ -1,14 +1,17 @@
 package com.turkcell.planservice.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.turkcell.planservice.client.ContractClient;
+import com.turkcell.planservice.client.ContractResponse;
 import com.turkcell.planservice.dto.request.CreatePlanRequest;
 import com.turkcell.planservice.dto.request.UpdatePlanRequest;
 import com.turkcell.planservice.dto.response.PlanResponse;
@@ -17,6 +20,7 @@ import com.turkcell.planservice.enums.PlanStatus;
 import com.turkcell.planservice.enums.PlanType;
 import com.turkcell.planservice.event.PlanCreatedEvent;
 import com.turkcell.planservice.event.PlanUpdatedEvent;
+import com.turkcell.planservice.exception.PlanBusinessException;
 import com.turkcell.planservice.exception.PlanNotFoundException;
 import com.turkcell.planservice.repository.PlanRepository;
 import com.turkcell.planservice.service.PlanProducer;
@@ -70,8 +74,30 @@ public class PlanServiceImpl implements PlanService {
     @Override
     @Transactional
     public PlanResponse createPlan(CreatePlanRequest request) {
+        // Validasyonlar
+        if (request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new PlanBusinessException("Plan price must be greater than zero");
+        }
+
+        if (request.getSmsLimit() != null && request.getSmsLimit() < 0) {
+            throw new PlanBusinessException("SMS limit cannot be negative");
+        }
+
+        if (request.getInternetLimit() != null && request.getInternetLimit() < 0) {
+            throw new PlanBusinessException("Internet limit cannot be negative");
+        }
+
+        if (request.getVoiceLimit() != null && request.getVoiceLimit() < 0) {
+            throw new PlanBusinessException("Voice limit cannot be negative");
+        }
+
+        if (planRepository.existsByName(request.getName())) {
+            throw new PlanBusinessException("Plan with name " + request.getName() + " already exists");
+        }
+
         Plan plan = new Plan();
         plan.setName(request.getName());
+        plan.setDescription(request.getDescription());
         plan.setPrice(request.getPrice());
         plan.setType(request.getType());
         plan.setStatus(PlanStatus.ACTIVE); // Yeni oluşturulan planlar varsayılan olarak aktif
@@ -82,20 +108,20 @@ public class PlanServiceImpl implements PlanService {
         // Plan kaydediliyor
         Plan savedPlan = planRepository.save(plan);
 
-        // PlanCreatedEvent oluşturuluyor
-        PlanCreatedEvent event = new PlanCreatedEvent(
-                savedPlan.getId(),
-                savedPlan.getName(),
-                savedPlan.getPrice(),
-                savedPlan.getType(),
-                savedPlan.getStatus(),
-                savedPlan.getSmsLimit(),
-                savedPlan.getInternetLimit(),
-                savedPlan.getVoiceLimit(),
-                savedPlan.getCreatedAt());
-
-        // Kafka Producer ile event gönderimi
-        planProducer.sendPlanCreatedEvent(event); // Kafka'ya gönderiliyor
+        // Kafka event gönderimi
+        PlanCreatedEvent event = PlanCreatedEvent.builder()
+                .id(savedPlan.getId())
+                .name(savedPlan.getName())
+                .description(savedPlan.getDescription())
+                .price(savedPlan.getPrice())
+                .type(savedPlan.getType())
+                .status(savedPlan.getStatus())
+                .smsLimit(savedPlan.getSmsLimit())
+                .internetLimit(savedPlan.getInternetLimit())
+                .voiceLimit(savedPlan.getVoiceLimit())
+                .createdAt(savedPlan.getCreatedAt())
+                .build();
+        planProducer.sendPlanCreatedEvent(event);
 
         return mapToResponse(savedPlan);
     }
@@ -106,8 +132,33 @@ public class PlanServiceImpl implements PlanService {
         Plan plan = planRepository.findById(request.getId())
                 .orElseThrow(() -> new PlanNotFoundException(request.getId()));
 
+        // Validasyonlar
+        if (request.getPrice() != null && request.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new PlanBusinessException("Plan price must be greater than zero");
+        }
+
+        if (request.getSmsLimit() != null && request.getSmsLimit() < 0) {
+            throw new PlanBusinessException("SMS limit cannot be negative");
+        }
+
+        if (request.getInternetLimit() != null && request.getInternetLimit() < 0) {
+            throw new PlanBusinessException("Internet limit cannot be negative");
+        }
+
+        if (request.getVoiceLimit() != null && request.getVoiceLimit() < 0) {
+            throw new PlanBusinessException("Voice limit cannot be negative");
+        }
+
+        if (request.getName() != null && !request.getName().equals(plan.getName()) && planRepository.existsByName(request.getName())) {
+            throw new PlanBusinessException("Plan with name " + request.getName() + " already exists");
+        }
+
         if (request.getName() != null) {
             plan.setName(request.getName());
+        }
+
+        if (request.getDescription() != null) {
+            plan.setDescription(request.getDescription());
         }
 
         if (request.getPrice() != null) {
@@ -137,17 +188,17 @@ public class PlanServiceImpl implements PlanService {
         Plan updatedPlan = planRepository.save(plan);
 
         // Kafka event gönderimi
-        PlanUpdatedEvent event = new PlanUpdatedEvent(
-                updatedPlan.getId(),
-                updatedPlan.getName(),
-                updatedPlan.getPrice(),
-                updatedPlan.getType(),
-                updatedPlan.getStatus(),
-                updatedPlan.getSmsLimit(),
-                updatedPlan.getInternetLimit(),
-                updatedPlan.getVoiceLimit(),
-                LocalDateTime.now());
-
+        PlanUpdatedEvent event = PlanUpdatedEvent.builder()
+                .id(updatedPlan.getId())
+                .name(updatedPlan.getName())
+                .price(updatedPlan.getPrice())
+                .type(updatedPlan.getType())
+                .status(updatedPlan.getStatus())
+                .smsLimit(updatedPlan.getSmsLimit())
+                .internetLimit(updatedPlan.getInternetLimit())
+                .voiceLimit(updatedPlan.getVoiceLimit())
+                .updatedAt(LocalDateTime.now())
+                .build();
         planProducer.sendPlanUpdatedEvent(event);
 
         return mapToResponse(updatedPlan);
@@ -159,12 +210,29 @@ public class PlanServiceImpl implements PlanService {
         Plan plan = planRepository.findById(id)
                 .orElseThrow(() -> new PlanNotFoundException(id));
 
-        // Planın aktif sözleşmeleri kontrol edilebilir
-        // contractClient.getContractsByPlanId(id)
+        // Planın aktif sözleşmeleri kontrol ediliyor
+        ResponseEntity<List<ContractResponse>> contractsResponse = contractClient.getContractsByPlanId(id);
+        if (contractsResponse.getBody() != null && !contractsResponse.getBody().isEmpty()) {
+            throw new PlanBusinessException("Plan has active contracts and cannot be deleted");
+        }
 
         // Silmek yerine durumunu DEPRECATED olarak işaretleme
         plan.setStatus(PlanStatus.DEPRECATED);
-        planRepository.save(plan);
+        Plan updatedPlan = planRepository.save(plan);
+
+        // Kafka event gönderimi
+        PlanUpdatedEvent event = PlanUpdatedEvent.builder()
+                .id(updatedPlan.getId())
+                .name(updatedPlan.getName())
+                .price(updatedPlan.getPrice())
+                .type(updatedPlan.getType())
+                .status(updatedPlan.getStatus())
+                .smsLimit(updatedPlan.getSmsLimit())
+                .internetLimit(updatedPlan.getInternetLimit())
+                .voiceLimit(updatedPlan.getVoiceLimit())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        planProducer.sendPlanUpdatedEvent(event);
     }
 
     @Override
@@ -175,18 +243,19 @@ public class PlanServiceImpl implements PlanService {
     }
 
     private PlanResponse mapToResponse(Plan plan) {
-        return PlanResponse.builder()
-                .id(plan.getId())
-                .name(plan.getName())
-                .price(plan.getPrice())
-                .type(plan.getType())
-                .status(plan.getStatus())
-                .smsLimit(plan.getSmsLimit())
-                .internetLimit(plan.getInternetLimit())
-                .voiceLimit(plan.getVoiceLimit())
-                .createdAt(plan.getCreatedAt())
-                .updatedAt(plan.getUpdatedAt())
-                .build();
+        PlanResponse response = new PlanResponse();
+        response.setId(plan.getId());
+        response.setName(plan.getName());
+        response.setDescription(plan.getDescription());
+        response.setPrice(plan.getPrice());
+        response.setType(plan.getType());
+        response.setStatus(plan.getStatus());
+        response.setSmsLimit(plan.getSmsLimit());
+        response.setInternetLimit(plan.getInternetLimit());
+        response.setVoiceLimit(plan.getVoiceLimit());
+        response.setCreatedAt(plan.getCreatedAt());
+        response.setUpdatedAt(plan.getUpdatedAt());
+        return response;
     }
 }
 

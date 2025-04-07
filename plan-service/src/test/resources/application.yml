@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: plan-service
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+    stream:
+      defaultBinder: kafka
+      function:
+        definition: planCreatedFunction
+      bindings:
+        planCreatedFunction-out-0:
+          destination: plan-topic
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+    
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+        
+  security:
+    jwt:
+      secret: test-secret-key-for-jwt-token-generation-and-validation
+      expiration: 86400000
+
+server:
+  port: 0
+
+eureka:
+  client:
+    enabled: false 

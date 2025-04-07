@@ -66,9 +66,10 @@ public class PlanController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PlanResponse> updatePlan(@Valid @RequestBody UpdatePlanRequest request) {
+    public ResponseEntity<PlanResponse> updatePlan(@PathVariable UUID id, @Valid @RequestBody UpdatePlanRequest request) {
+        request.setId(id);
         return ResponseEntity.ok(planService.updatePlan(request));
     }
     
