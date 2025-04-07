@@ -16,6 +16,7 @@ import com.turkcell.contractservice.repositories.ContractRepository;
 import com.turkcell.contractservice.services.ContractProducer;
 import com.turkcell.contractservice.services.ContractService;
 
+import io.github.ergulberke.event.contract.ContractCreatedEvent;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -24,7 +25,6 @@ import lombok.AllArgsConstructor;
 public class ContractManager implements ContractService {
     private final ContractRepository repository;
     private final ContractProducer contractProducer;
-
 
     @Override
     public void add(CreateContractRequest request) {
@@ -39,7 +39,7 @@ public class ContractManager implements ContractService {
         contract.setBillingPlan(request.getBillingPlan());
         contract.setMonthlyFee(request.getBillingPlan().calculateMonthlyFee());
 
-         // Sözleşmeyi kaydediyoruz ve geri dönen nesneyi 'savedContract' olarak alıyoruz
+        // Sözleşmeyi kaydediyoruz ve geri dönen nesneyi 'savedContract' olarak alıyoruz
         Contract savedContract = repository.save(contract);
         // Setter'ları kullanarak event'i oluşturuyoruz
         ContractCreatedEvent event = new ContractCreatedEvent();
@@ -145,7 +145,6 @@ public class ContractManager implements ContractService {
                 contract.getCancellationReason(),
                 contract.getCancellationDate(),
                 contract.getLastUpdateDate(),
-                contract.getCreatedAt()
-        );
+                contract.getCreatedAt());
     }
-} 
+}
