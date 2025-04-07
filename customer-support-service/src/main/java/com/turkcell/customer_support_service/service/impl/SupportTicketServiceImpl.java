@@ -8,6 +8,7 @@ import com.turkcell.customer_support_service.enums.TicketStatus;
 import com.turkcell.customer_support_service.repository.SupportTicketRepository;
 import com.turkcell.customer_support_service.service.SupportTicketService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class SupportTicketServiceImpl implements SupportTicketService {
     private final SupportTicketRepository supportTicketRepository;
     private final CustomerClient customerClient;
     private final UserClient userClient;
+    private final StreamBridge streamBridge;
 
     @Override
     public SupportTicket createTicket(SupportTicket ticket) {
@@ -36,7 +38,12 @@ public class SupportTicketServiceImpl implements SupportTicketService {
             ticket.setStatus(TicketStatus.OPEN);
         }
 
-        return supportTicketRepository.save(ticket);
+        SupportTicket savedTicket = supportTicketRepository.save(ticket);
+
+        // Notify other services through event stream
+        streamBridge.send("ticketCreated-out-0", savedTicket);
+
+        return savedTicket;
     }
 
     @Override
@@ -87,7 +94,12 @@ public class SupportTicketServiceImpl implements SupportTicketService {
     public SupportTicket updateTicketStatus(UUID id, TicketStatus status) {
         SupportTicket ticket = getTicketById(id);
         ticket.setStatus(status);
-        return supportTicketRepository.save(ticket);
+        SupportTicket updatedTicket = supportTicketRepository.save(ticket);
+
+        // Notify about status change
+        streamBridge.send("ticketStatusUpdated-out-0", updatedTicket);
+
+        return updatedTicket;
     }
 
     @Override

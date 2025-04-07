@@ -62,9 +62,16 @@ public class SupportTicketController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<SupportTicket> updateTicketStatus(
+    public ResponseEntity<SupportTicket> updateTicketStatusWithPut(
             @PathVariable UUID id,
             @RequestParam TicketStatus status) {
+        return ResponseEntity.ok(supportTicketService.updateTicketStatus(id, status));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<SupportTicket> updateTicketStatus(
+            @PathVariable UUID id,
+            @RequestBody TicketStatus status) {
         return ResponseEntity.ok(supportTicketService.updateTicketStatus(id, status));
     }
 
