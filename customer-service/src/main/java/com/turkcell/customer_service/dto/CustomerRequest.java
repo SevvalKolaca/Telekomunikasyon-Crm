@@ -1,6 +1,7 @@
 package com.turkcell.customer_service.dto;
 
 import com.turkcell.customer_service.enums.AccountStatus;
+import com.turkcell.contractservice.entities.enums.BillingPlan;
 import com.turkcell.customer_service.validation.TurkishPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -45,6 +47,9 @@ public class CustomerRequest {
 
     @NotNull(message = "Plan end date cannot be null")
     private LocalDate planEndDate;
+
+    @NotNull(message = "Billing plan cannot be null")
+    private BillingPlan billingPlan;
 
     //private AccountStatus accountStatus;
 }
