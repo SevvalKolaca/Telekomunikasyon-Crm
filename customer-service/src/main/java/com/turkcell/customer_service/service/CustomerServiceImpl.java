@@ -6,6 +6,7 @@ import com.turkcell.contractservice.dtos.requests.UpdateContractRequest;
 import com.turkcell.customer_service.client.PlanServiceClient;
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
+import com.turkcell.customer_service.dto.Plan.PlanResponse;
 import com.turkcell.customer_service.entity.Customer;
 import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinnessRules;
@@ -17,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -115,9 +117,36 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public CustomerResponse changeCustomerPlan(UUID customerId, UUID newPlanId, String reason) {
-        return null;
+        // Müşteriyi bul
+        Customer customer = rules.findCustomerByIdOrThrow(customerId);
+
+        // Plan Service'den yeni planın detaylarını al
+        PlanResponse newPlan = planServiceClient.getPlanById(newPlanId).getBody();
+        if (newPlan == null) {
+            throw new RuntimeException("Plan not found with ID: " + newPlanId);
+        }
+
+        // Plan'ın aktif olup olmadığını kontrol et
+        if (!planServiceClient.isPlanActive(newPlanId).getBody()) {
+            throw new RuntimeException("Plan is not active: " + newPlanId);
+        }
+
+        // Eski plan bilgilerini sakla
+        UUID oldPlanId = customer.getPlanId();
+        String oldPlanName = customer.getPlanName();
+
+        // Customer entity'sini güncelle
+        customer.setPlanId(newPlanId);
+        customer.setPlanName(newPlan.getName());
+        customer.setPlanStartDate(LocalDate.now());
+        customer.setPlanEndDate(LocalDate.now().plusMonths(newPlan.getDurationInMonths()));
+
+        Customer updatedCustomer = customerRepository.save(customer);
+        return buildCustomerResponse(updatedCustomer);
     }
+
 
     @Override
     public List<GetContractResponse> getByCustomerId(String customerId) {
