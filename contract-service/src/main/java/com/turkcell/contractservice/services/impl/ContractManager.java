@@ -3,6 +3,7 @@ package com.turkcell.contractservice.services.impl;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.ergulberke.event.contract.ContractCreatedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +46,7 @@ public class ContractManager implements ContractService {
         ContractCreatedEvent event = new ContractCreatedEvent();
         event.setContractId(savedContract.getId());
         event.setCustomerId(UUID.fromString(savedContract.getCustomerId())); // customerId'yi alıyoruz
-        event.setPlanId(UUID.fromString(String.valueOf(savedContract.getBillingPlan().ordinal()))); // Enum'dan
-                                                                                                    // planId'yi
-                                                                                                    // alıyoruz
+        event.setPlanId(UUID.randomUUID()); // Rastgele bir UUID oluşturuyoruz
         event.setStartDate(savedContract.getStartDate());
         event.setEndDate(savedContract.getEndDate());
         event.setPrice(savedContract.getMonthlyFee());

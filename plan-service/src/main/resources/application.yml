@@ -22,6 +22,12 @@ spring:
     username: postgres
     password: test
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 300000
+      connection-timeout: 20000
+      connection-test-query: SELECT 1
     
   jpa:
     hibernate:
@@ -31,8 +37,10 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    jdbc:
+      lob:
+        non_contextual_creation: true
         
-
   observation:
     zipkin:
       tracing:

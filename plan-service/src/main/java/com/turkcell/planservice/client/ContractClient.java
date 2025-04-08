@@ -18,20 +18,4 @@ public interface ContractClient {
     
     @PostMapping("/api/contracts/verify-plan")
     ResponseEntity<Boolean> verifyPlanAvailability(@RequestBody PlanVerificationRequest request);
-}
-
-class ContractResponse {
-    private UUID id;
-    private UUID customerId;
-    private UUID planId;
-    private String status;
-    
-    // Getters, setters, constructors
-}
-
-class PlanVerificationRequest {
-    private UUID planId;
-    private UUID customerId;
-    
-    // Getters, setters, constructors
 } 

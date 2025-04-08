@@ -18,6 +18,7 @@ import java.util.UUID;
 public class PlanCreatedEvent {
     private UUID id;
     private String name;
+    private String description;
     private BigDecimal price;
     private PlanType type;
     private PlanStatus status;

@@ -15,6 +15,17 @@
         <module name="gateway-server" />
         <module name="customer-support-service" />
       </profile>
+      <profile name="Annotation profile for notification-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="customer-service" />
+        <module name="notification-service" />
+        <module name="billing-payment-service" />
+      </profile>
       <profile name="Annotation profile for user-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -24,17 +35,6 @@
         </processorPath>
         <module name="analytics-service" />
         <module name="user-service" />
-      </profile>
-      <profile name="Annotation profile for billing-payment-service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="customer-service" />
-        <module name="notification-service" />
-        <module name="billing-payment-service" />
       </profile>
     </annotationProcessing>
   </component>

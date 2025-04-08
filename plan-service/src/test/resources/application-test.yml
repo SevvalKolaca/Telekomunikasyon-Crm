@@ -1,0 +1,44 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+    stream:
+      enabled: false
+    
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+        
+  security:
+    jwt:
+      secret: test-secret-key-for-jwt-token-generation-and-validation
+      expiration: 86400000
+
+server:
+  port: 0
+
+eureka:
+  client:
+    enabled: false
+
+logging:
+  level:
+    com.turkcell.planservice: DEBUG
+    org.springframework.test: DEBUG
+    org.springframework.boot.test.context: DEBUG 
