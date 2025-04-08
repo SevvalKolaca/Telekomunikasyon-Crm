@@ -16,6 +16,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Test ortamı için CSRF'i devre dışı bırak
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll() // API endpointlerine erişime izin ver
+                        .requestMatchers("/v3/api-docs/**").permitAll() // Swagger API docs
+                        .requestMatchers("/swagger-ui/**").permitAll() // Swagger UI
+                        .requestMatchers("/swagger-ui.html").permitAll() // Swagger UI HTML
+                        .requestMatchers("/swagger-resources/**").permitAll() // Swagger kaynakları
+                        .requestMatchers("/actuator/**").permitAll() // Actuator endpoint'leri
                         .anyRequest().authenticated());
 
         return http.build();
