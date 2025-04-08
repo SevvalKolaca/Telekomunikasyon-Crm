@@ -11,6 +11,8 @@ import io.github.ergulberke.event.contract.ContractCreatedEvent;
 import io.github.ergulberke.event.plan.PlanCreatedEvent;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
@@ -101,4 +103,33 @@ public class SubscriptionAnalyticsServiceImpl implements SubscriptionAnalyticsSe
             log.error("❌ Failed to save plan analytics: {}", event.getId(), e);
         }
     }
+
+    // 🔍 Yeni eklenen analiz sorguları
+
+    @Override
+    public List<SubscriptionAnalytics> getAnalyticsByPlanId(UUID planId) {
+        return subscriptionAnalyticsRepository.findByPlanId(planId);
+    }
+
+    @Override
+    public List<SubscriptionAnalytics> getAllAnalytics() {
+        return subscriptionAnalyticsRepository.findAll();
+    }
+
+    @Override
+    public List<SubscriptionAnalytics> getAnalyticsByPlanName(String planName) {
+        return subscriptionAnalyticsRepository.findByPlanName(planName);
+    }
+
+    @Override
+    public List<SubscriptionAnalytics> getAnalyticsByStatus(String status) {
+        return subscriptionAnalyticsRepository.findByStatus(status);
+    }
+
+    @Override
+    public List<SubscriptionAnalytics> getAnalyticsByBillingCycle(String billingCycle) {
+        return subscriptionAnalyticsRepository.findByBillingCycle(billingCycle);
+    }
 }
+
+

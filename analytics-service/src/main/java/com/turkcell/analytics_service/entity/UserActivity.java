@@ -20,28 +20,29 @@ public class UserActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name="id")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "user_id")
     private UUID userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "activity_type")
     private ActivityType activityType;
 
-    @Column(nullable = false)
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
-    @Column(length = 500)
+    @Column(name = "description")
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "ip_address")
     private String ipAddress;
 
-    @Column(nullable = false)
+    @Column(name = "user_agent")
     private String userAgent;
 
-    @Column(nullable = false)
+    @Column(name = "session_id")
     private String sessionId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
