@@ -111,7 +111,16 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      
+  customer-support-service:
+    image: turkcell-customer-support-service
+    container_name: pg-customer-support-service
+    ports:
+      - "8087:8087"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-customer-support-service:5432/customer-support
 
+      
   notification-service:
     image: turkcell-notification-service
     container_name: notification_service
