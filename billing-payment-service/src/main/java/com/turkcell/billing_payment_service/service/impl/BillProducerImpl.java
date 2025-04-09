@@ -3,6 +3,8 @@ package com.turkcell.billing_payment_service.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.turkcell.billing_payment_service.service.BillProducer;
 
@@ -15,6 +17,8 @@ public class BillProducerImpl implements BillProducer {
 
     @Autowired
     private StreamBridge streamBridge;
+    private static final Logger log = LoggerFactory.getLogger(BillProducerImpl.class);
+
 
     @Override
     public void sendBillCreatedEvent(BillCreatedEvent event) {
