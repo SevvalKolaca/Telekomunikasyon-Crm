@@ -1,5 +1,5 @@
 services:
-  pg-1:
+  pg-analytics-service:
     image: postgres
     container_name: "pg-1"
     ports:
