@@ -59,6 +59,19 @@ services:
     volumes:
       - pg_user_service_data:/var/lib/postgresql/data
 
+  pg-customer-support-service:
+    image: postgres
+    container_name: pg-customer-support-service
+    ports:
+    - "5437:5432"
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=test
+    - POSTGRES_DB=customer-support
+    volumes:
+    - pg_customer_support_service_data:/var/lib/postgresql/data
+    
+
   user-service:
     build:
       context: ./user-service
