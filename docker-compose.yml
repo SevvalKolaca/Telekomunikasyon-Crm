@@ -7,7 +7,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=customer-service
+      - POSTGRES_DB=analytics-service
     volumes:
       - pg1_data:/var/lib/postgresql/data
 
