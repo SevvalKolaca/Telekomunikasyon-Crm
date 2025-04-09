@@ -80,7 +80,14 @@ services:
     ports:
       - "8085:8085"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-2:5433/postgres
+      SPRING_CLOUD_CONFIG_PROFILE: "dev"
+
+  config-server:
+    image: turkcell-config-server
+    container_name: config_server
+    ports:
+      - "8089:8089"
+
 
   analytics-service:
     image: turkcell-analytics-service
