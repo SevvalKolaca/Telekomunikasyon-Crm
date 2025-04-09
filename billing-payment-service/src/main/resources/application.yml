@@ -1,34 +1,46 @@
+# spring:
+#   port: 8085
+#   application:
+#     name: "billing-payment-service"
+#   datasource:
+#     url: jdbc:postgresql://localhost:5433/postgres
+#     username: postgres
+#     password: test
+#     driver-class-name: org.postgresql.Driver
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.PostgreSQLDialect
+#
+#   cloud:
+#     stream:
+#       defaultBinder: kafka
+#       function:
+#         definition: billCreatedFunction
+#       bindings:
+#        billCreatedFunction-out-0:
+#           destination: bill-topic
+#           content-type: application/json
+#       kafka:
+#         binder:
+#           brokers: localhost
+#           defaultBrokerPort: 9092
+#
+#     config:
+#       profile: local
+#   config:
+#     import: configserver:http://localhost:8089
+#
+
 spring:
   port: 8085
   application:
-    name: "billing-payment-service"
-  datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
-    username: postgres
-    password: test
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
+    name: "billingpaymentservice"
   cloud:
-    stream:
-      defaultBinder: kafka
-      function:
-        definition: billCreatedFunction
-      bindings:
-       billCreatedFunction-out-0:
-          destination: bill-topic
-          content-type: application/json
-      kafka:
-        binder:
-          brokers: localhost
-          defaultBrokerPort: 9092
-
     config:
+      uri: http://localhost:8089
       profile: local
   config:
     import: configserver:http://localhost:8089
