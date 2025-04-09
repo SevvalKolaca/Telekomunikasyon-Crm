@@ -6,7 +6,7 @@ spring:
       server:
         git:
           uri: "https://github.com/ergulberke/crm-microservices-config.git"    # config github repo url
-          default-label: main
+          default-label: main  # bizim github sayfalarında master değil main kullanılıyor o yüzden main yaptım hata verirse branch değiştirin
 
 server:
   port: 8089
