@@ -153,8 +153,14 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>io.github.ergulberke</groupId>
+            <artifactId>turkcell-t2</artifactId>
+            <version>2.1.6</version>
+            <scope>compile</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

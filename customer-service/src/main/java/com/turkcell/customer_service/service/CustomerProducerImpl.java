@@ -1,4 +1,4 @@
-package com.turkcell.customer_service.service.impl;
+package com.turkcell.customer_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;

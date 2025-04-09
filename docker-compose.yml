@@ -1,13 +1,13 @@
 services:
-  pg-1:
+  pg-analytics-service:
     image: postgres
-    container_name: "pg-1"
+    container_name: "pg-analytics-service"
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=customer-service
+      - POSTGRES_DB=analytics-service
     volumes:
       - pg1_data:/var/lib/postgresql/data
 
@@ -58,6 +58,19 @@ services:
       - POSTGRES_DB=userservice
     volumes:
       - pg_user_service_data:/var/lib/postgresql/data
+
+  pg-customer-support-service:
+    image: postgres
+    container_name: pg-customer-support-service
+    ports:
+    - "5437:5432"
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=test
+    - POSTGRES_DB=customer-support
+    volumes:
+    - pg_customer_support_service_data:/var/lib/postgresql/data
+
 
   user-service:
     build:
@@ -187,7 +200,8 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
 
 volumes:
-  pg1_data:
+  pg_analytics_service_data:
+  pg_customer_support_service_data:
   pg2_data:
   pg3_data:
   contractservice_data:
