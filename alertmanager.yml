@@ -1,0 +1,16 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: "papercut-smtp:25"
+  smtp_from: "alertmanager@example.com"
+  smtp_auth_username: "alertmanager"
+  smtp_auth_password: "alertmanager"
+
+route:
+  receiver: "email-alert"
+
+receivers:
+  - name: "email-alert"
+    email_configs:
+      - to: "test@example.com"
+        from: "alertmanager@example.com"
+        require_tls: false

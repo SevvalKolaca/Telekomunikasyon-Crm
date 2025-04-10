@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
  * Kafka entegrasyonunun test sınıfı
  * Bu test, gelen Kafka mesajlarının doğru işlenip işlenmediğini test eder
  */
+@SuppressWarnings("ALL")
 @SpringBootTest
 @ActiveProfiles("test")
 @TestPropertySource(properties = {

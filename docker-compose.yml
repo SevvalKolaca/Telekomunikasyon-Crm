@@ -93,7 +93,6 @@ services:
       start_period: 10s
       timeout: 5s
 
-
   discovery-server:
     build:
       context: ./discovery-server
@@ -200,12 +199,22 @@ services:
       - prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./alert.rules.yml:/etc/prometheus/alert.rules.yml
+
   alertmanager:
     image: prom/alertmanager
     ports:
       - 9093:9093
     volumes:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+
+  papercut-smtp:
+    image: jijiechen/papercut
+    container_name: papercut-smtp
+    ports:
+      - "25:25"      # SMTP portu
+      - "37408:37408" # Web arayüzü portu
+    restart: always
+
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -218,6 +227,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
+
   zipkin:
     image: openzipkin/zipkin
     ports:

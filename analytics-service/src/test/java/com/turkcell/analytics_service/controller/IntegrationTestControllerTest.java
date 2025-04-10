@@ -6,11 +6,14 @@ import com.turkcell.analytics_service.service.UserActivityService;
 import io.github.ergulberke.event.user.UserLoginEvent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -21,9 +24,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(IntegrationTestController.class)
-@Import(SecurityConfig.class)
-public class IntegrationTestControllerTest {
+@SuppressWarnings("ALL")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
+class IntegrationTestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

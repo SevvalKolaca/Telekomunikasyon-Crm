@@ -20,7 +20,8 @@ management:
       show-details: always
   metrics:
     export:
-      enabled: true
+      prometheus:
+        enabled: true
   tracing:
     sampling:
       probability: 1.0
