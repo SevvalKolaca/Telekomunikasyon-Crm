@@ -34,13 +34,16 @@
 #     import: configserver:http://localhost:8089
 #
 
+# configurl: http://localhost:8089
+
 spring:
   port: 8085
   application:
-    name: "billingpaymentservice"
+    name: billingpaymentservice
+  config:
+    import: configserver:http://config-server:8089
+  profiles:
+    active: local
   cloud:
     config:
-      uri: http://localhost:8089
       profile: local
-  config:
-    import: configserver:http://localhost:8089

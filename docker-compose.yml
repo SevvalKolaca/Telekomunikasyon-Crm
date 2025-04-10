@@ -91,14 +91,29 @@ services:
     container_name: billing_payment_service
     ports:
       - "8085:8085"
+    depends_on:
+      - config-server
     environment:
-      SPRING_CLOUD_CONFIG_PROFILE: "dev"
+      SPRING_CLOUD_CONFIG_PROFILE: local
+
 
   config-server:
     image: turkcell-config-server
     container_name: config_server
     ports:
       - "8089:8089"
+
+  discovery-server:
+    image: turkcell-discovery-server
+    container_name: discovery-server
+    ports:
+      - "8888:8888"
+
+  gateway-server:
+    image: turkcell-gateway-server
+    container_name: gateway-server
+    ports:
+      - "8080:8080"
 
 
   analytics-service:
