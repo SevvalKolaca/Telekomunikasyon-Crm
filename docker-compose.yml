@@ -92,7 +92,8 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      - config-server
+      config-server:
+        condition: service_healthy
     environment:
       SPRING_CLOUD_CONFIG_PROFILE: local
 
@@ -102,6 +103,13 @@ services:
     container_name: config_server
     ports:
       - "8089:8089"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 5s
+
 
   discovery-server:
     image: turkcell-discovery-server
@@ -120,6 +128,9 @@ services:
     container_name: plan-service
     ports:
       - "8084:8084"
+    depends_on:
+      config-server:
+        condition: service_healthy
 
 
   analytics-service:
