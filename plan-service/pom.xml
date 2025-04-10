@@ -13,14 +13,14 @@
 
     <groupId>com.turkcell</groupId>
     <artifactId>plan-service</artifactId>
-    <version>2.1.5</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>plan-service</name>
     <description>Plan Service for Telekomunikasyon CRM</description>
 
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
-        <turkcell-t2.version>2.1.5</turkcell-t2.version>
+        <turkcell-t2.version>2.1.6</turkcell-t2.version>
     </properties>
 
     <dependencies>
@@ -102,8 +102,15 @@
         <dependency>
             <groupId>io.github.ergulberke</groupId>
             <artifactId>turkcell-t2</artifactId>
-            <version>${turkcell-t2.version}</version>
+            <version>2.1.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
 
         <!-- Lombok -->
         <dependency>

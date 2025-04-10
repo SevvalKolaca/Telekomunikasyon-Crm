@@ -2,7 +2,7 @@ configurl: http://localhost:8089
 
 spring:
   application:
-    name: "cıustomersupportservice"
+    name: "customersupportservice"
   cloud:
     config:
       profile: local
