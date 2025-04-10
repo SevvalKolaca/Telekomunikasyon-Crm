@@ -215,6 +215,7 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
 
 volumes:
+  pg1_data:
   pg_analytics_service_data:
   pg_customer_support_service_data:
   pg2_data:
@@ -224,5 +225,4 @@ volumes:
   pg_user_service_data:
   grafana_data:
   prometheus_data:
-#
-# 2 mongo ve 1 mysql eklenecek
+
