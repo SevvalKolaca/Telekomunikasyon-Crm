@@ -13,7 +13,7 @@
 
     <groupId>com.turkcell</groupId>
     <artifactId>plan-service</artifactId>
-    <version>2.1.5</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>plan-service</name>
     <description>Plan Service for Telekomunikasyon CRM</description>
 
