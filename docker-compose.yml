@@ -35,18 +35,6 @@ services:
     volumes:
       - pg3_data:/var/lib/postgresql/data
 
-  contractservice:
-    image: postgres
-    container_name: "contract-service"
-    ports:
-      - "5436:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=test
-      - POSTGRES_DB=contractservice
-    volumes:
-      - contractservice_data:/var/lib/postgresql/data
-
   pg-user-service:
     image: postgres
     container_name: "pg-user-service"
@@ -71,13 +59,29 @@ services:
     volumes:
       - pg_customer_support_service_data:/var/lib/postgresql/data
 
+  contractservice:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    image: turkcell-contract-service
+    container_name: "contract-service"
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=contractservice
+    volumes:
+      - contractservice_data:/var/lib/postgresql/data
+
   user-service:
     build:
       context: ./user-service
       dockerfile: Dockerfile
+    image: turkcell-user-service
     container_name: "user-service"
     ports:
-      - "8081:8080"
+      - "8081:8081"
     depends_on:
       - pg-user-service
       - kafka
@@ -87,6 +91,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: test
 
   billing-payment-service:
+    build:
+      context: ./billing-payment-service
+      dockerfile: Dockerfile
     image: turkcell-billing-payment-service
     container_name: billing_payment_service
     ports:
@@ -99,6 +106,9 @@ services:
 
 
   config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
     image: turkcell-config-server
     container_name: config_server
     ports:
@@ -112,12 +122,18 @@ services:
 
 
   discovery-server:
+    build:
+      context: ./discovery-server
+      dockerfile: Dockerfile
     image: turkcell-discovery-server
     container_name: discovery-server
     ports:
       - "8888:8888"
 
   gateway-server:
+    build:
+      context: ./gateway-server
+      dockerfile: Dockerfile
     image: turkcell-gateway-server
     container_name: gateway-server
     ports:
@@ -132,8 +148,10 @@ services:
       config-server:
         condition: service_healthy
 
-
   analytics-service:
+    build:
+      context: ./analytics-service
+      dockerfile: Dockerfile
     image: turkcell-analytics-service
     container_name: analytics_service
     ports:
@@ -143,17 +161,23 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      
+
   customer-support-service:
+    build:
+      context: ./customer-support-service
+      dockerfile: Dockerfile
     image: turkcell-customer-support-service
-    container_name: pg-customer-support-service
+    container_name: customer-support-service
     ports:
       - "8087:8087"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-customer-support-service:5432/customer-support
 
-      
+
   notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
     image: turkcell-notification-service
     container_name: notification_service
     ports:
@@ -247,6 +271,7 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
 
 volumes:
+  pg1_data:
   pg_analytics_service_data:
   pg_customer_support_service_data:
   pg2_data:
