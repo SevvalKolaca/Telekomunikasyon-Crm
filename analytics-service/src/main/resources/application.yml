@@ -8,8 +8,4 @@ spring:
       profile: local
   config:
     import: configserver:${configurl}
-<<<<<<< HEAD
-#config-servers
-=======
-#config-servers
->>>>>>> ef083cf575666fab109f399362b5aea14c775555
+
