@@ -59,7 +59,7 @@ services:
     volumes:
       - pg_user_service_data:/var/lib/postgresql/data
 
-        pg-customer-support-service:
+  pg-customer-support-service:
     image: postgres
     container_name: "pg-customer-support-service"
     ports:
