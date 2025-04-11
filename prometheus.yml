@@ -10,7 +10,6 @@ alerting:
         - targets:
             - "alertmanager:9093"
 
-
 scrape_configs:
   - job_name: "config-server-app"
     scrape_interval: 30s
@@ -30,7 +29,7 @@ scrape_configs:
     static_configs:
       - targets: ["user-service:8081"]
 
-   - job_name: "analytics-service"
+  - job_name: "analytics-service"
     scrape_interval: 30s
     metrics_path: "/actuator/prometheus"
     static_configs:
@@ -79,6 +78,18 @@ scrape_configs:
       - targets: ["discovery-server:8888"]
 
 
+
+
+      
+    
+  
+      
+      
+      
+      
+      
+      
+      
 
 
       
