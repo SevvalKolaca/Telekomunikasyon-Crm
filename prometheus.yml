@@ -17,3 +17,79 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     static_configs:
       - targets: ["config-server:8089"]
+
+  - job_name: "contract-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["contract-service:8083"]
+
+  - job_name: "user-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["user-service:8081"]
+
+   - job_name: "analytics-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["analytics-service:8087"]
+    
+  - job_name: "customer-support-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["customer-support-service:8086"]
+
+  - job_name: "billing-payment-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["billing-payment-service:8085"]
+
+  - job_name: "plan-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["plan-service:8084"]
+
+  - job_name: "customer-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["customer-service:8082"]
+
+  - job_name: "notification-service"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["notification-service:8088"]
+
+  - job_name: "gateway-server"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["gateway-server:8080"]
+  
+  - job_name: "discovery-server"
+    scrape_interval: 30s
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["discovery-server:8888"]
+
+
+
+
+      
+    
+  
+      
+      
+      
+      
+      
+      
+      
+
+

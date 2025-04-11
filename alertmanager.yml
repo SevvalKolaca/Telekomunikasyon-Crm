@@ -1,16 +1,20 @@
 global:
   resolve_timeout: 5m
-  smtp_smarthost: "papercut-smtp:25"
-  smtp_from: "alertmanager@example.com"
-  smtp_auth_username: "alertmanager"
-  smtp_auth_password: "alertmanager"
+  smtp_smarthost: "papercut-smtp:25"  # SMTP sunucusu
+  smtp_from: "alertmanager@example.com"  # Gönderen e-posta adresi
+  smtp_auth_username: "alertmanager"  # SMTP kimlik doğrulama kullanıcı adı
+  smtp_auth_password: "alertmanager"  # SMTP kimlik doğrulama şifresi
 
 route:
-  receiver: "email-alert"
+  receiver: "email-alert"  # Varsayılan alıcı
+  group_by: ['alertname']  # Alarmları gruplandırırken hangi etiketlerin dikkate alınacağını belirtir
+  group_wait: 30s         # Gruplama işlemi başlatıldığında ne kadar süre bekleyeceğini belirtir
+  group_interval: 5m      # Aynı alarmı tekrar bildirecekse, ne kadar süre bekleyeceğini belirtir
+  repeat_interval: 3h     # Aynı alarm tekrarlandığında, ne kadar süre sonra tekrar bildirileceğini belirtir
 
 receivers:
   - name: "email-alert"
     email_configs:
-      - to: "test@example.com"
-        from: "alertmanager@example.com"
-        require_tls: false
+      - to: "test@example.com"  # Alıcı e-posta adresi
+        from: "alertmanager@example.com"  # Gönderen e-posta adresi
+        require_tls: false  # TLS zorunlu değil

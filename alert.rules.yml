@@ -9,3 +9,106 @@ groups:
         annotations:
           description: "Config server is down"
           summary: "Config server is down"
+          
+  - name: "contract-service"
+    rules:
+      - alert: "ContractServiceDown"
+        expr: up{job="contract-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Contract service is down"
+          summary: "Contract service is down"
+
+  - name: "user-service"
+    rules:
+      - alert: "UserServiceDown"
+        expr: up{job="user-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "User service is down"
+          summary: "User service is down"
+
+  - name: "analytics-service"
+    rules:
+      - alert: "AnalyticsServiceDown"
+        expr: up{job="analytics-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Analytics service is down"
+          summary: "Analytics service is down"
+
+  - name: "customer-support-service"
+    rules:
+      - alert: "CustomerSupportServiceDown"
+        expr: up{job="customer-support-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Customer support service is down"
+          summary: "Customer support service is down"
+
+  - name: "billing-payment-service"
+    rules:
+      - alert: "BillingPaymentServiceDown"
+        expr: up{job="billing-payment-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Billing payment service is down"
+          summary: "Billing payment service is down"
+
+  - name: "plan-service"
+    rules:
+      - alert: "PlanServiceDown"
+        expr: up{job="plan-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Plan service is down"
+          summary: "Plan service is down"
+
+  - name: "notification-service"
+    rules:
+      - alert: "NotificationServiceDown"
+        expr: up{job="notification-service"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Notification service is down"
+          summary: "Notification service is down"
+
+  - name: "discovery-server"
+    rules:
+      - alert: "DiscoveryServerDown"
+        expr: up{job="discovery-server"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Discovery server is down"
+          summary: "Discovery server is down"
+          
+  groups:
+  - name: "gateway-server"
+    rules:
+      - alert: "GatewayServerDown"
+        expr: up{job="gateway-server"} == 0
+        for: 1m
+        labels:
+          severity: "critical"
+        annotations:
+          description: "Gateway server is down"
+          summary: "Gateway server is down"
+
+
+
