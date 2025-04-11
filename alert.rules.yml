@@ -1,114 +1,130 @@
 groups:
-  - name: "config-server-app"
+  - name: example-alerts
     rules:
-      - alert: "ConfigServerDown"
-        expr: up{job="config-server-app"} == 0
-        for: 1m
+      # Bir konteyner 5 dakika boyunca kapalıysa alarm
+      - alert: ContainerDown
+        expr: up == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Config server is down"
-          summary: "Config server is down"
-          
-  - name: "contract-service"
-    rules:
-      - alert: "ContractServiceDown"
-        expr: up{job="contract-service"} == 0
-        for: 1m
-        labels:
-          severity: "critical"
-        annotations:
-          description: "Contract service is down"
-          summary: "Contract service is down"
+          summary: "Konteyner {{ $labels.container }} 5 dakikadır kapalı."
+          description: "Konteyner {{ $labels.container }} servisinde 5 dakikadır bir problem var."
 
-  - name: "user-service"
-    rules:
-      - alert: "UserServiceDown"
-        expr: up{job="user-service"} == 0
-        for: 1m
+      # PostgreSQL veritabanı sağlıklı değilse alarm
+      - alert: PostgresDown
+        expr: pg_up{job="postgres"} == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "User service is down"
-          summary: "User service is down"
+          summary: "PostgreSQL veritabanı {{ $labels.container }} sağlıklı değil."
+          description: "PostgreSQL veritabanı {{ $labels.container }} yanıt vermiyor."
 
-  - name: "analytics-service"
-    rules:
-      - alert: "AnalyticsServiceDown"
-        expr: up{job="analytics-service"} == 0
-        for: 1m
+      # Kafka broker'ı kapalıysa alarm
+      - alert: KafkaBrokerDown
+        expr: kafka_consumer_group_lag{job="kafka"} == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Analytics service is down"
-          summary: "Analytics service is down"
+          summary: "Kafka broker'ı kapalı veya gecikiyor."
+          description: "Kafka broker'ı mesajları beklediği gibi işleyemiyor."
 
-  - name: "customer-support-service"
-    rules:
-      - alert: "CustomerSupportServiceDown"
-        expr: up{job="customer-support-service"} == 0
-        for: 1m
+      # Bir servisin sağlık kontrolü başarısızsa alarm
+      - alert: ServiceHealthCheckFailed
+        expr: up{job="service", status="unhealthy"} == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Customer support service is down"
-          summary: "Customer support service is down"
+          summary: "Servis {{ $labels.service }} sağlık kontrolünü geçemedi."
+          description: "Servis {{ $labels.service }} sağlık kontrolü başarısız oldu."
 
-  - name: "billing-payment-service"
-    rules:
-      - alert: "BillingPaymentServiceDown"
-        expr: up{job="billing-payment-service"} == 0
-        for: 1m
+      # MySQL servisi kapalıysa alarm
+      - alert: MysqlDown
+        expr: mysql_up == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Billing payment service is down"
-          summary: "Billing payment service is down"
+          summary: "MySQL servisi kapalı."
+          description: "MySQL servisi erişilemiyor."
 
-  - name: "plan-service"
-    rules:
-      - alert: "PlanServiceDown"
-        expr: up{job="plan-service"} == 0
-        for: 1m
+      # Prometheus metrikleri almıyorsa alarm
+      - alert: PrometheusScrapeFailed
+        expr: prometheus_target_last_scrape_duration_seconds{job="prometheus"} > 5
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Plan service is down"
-          summary: "Plan service is down"
+          summary: "Prometheus {{ $labels.target }}'den metrik alamadı."
+          description: "Prometheus {{ $labels.target }} hedefinden 5 dakikadır metrik alamıyor."
 
-  - name: "notification-service"
-    rules:
-      - alert: "NotificationServiceDown"
-        expr: up{job="notification-service"} == 0
-        for: 1m
+      # Grafana servisi kapalıysa alarm
+      - alert: GrafanaDown
+        expr: up{job="grafana"} == 0
+        for: 5m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "Notification service is down"
-          summary: "Notification service is down"
+          summary: "Grafana servisi kapalı."
+          description: "Grafana servisi erişilemiyor."
 
-  - name: "discovery-server"
+      # Kafka'da bir konuda çok fazla mesaj bekleniyorsa alarm
+      - alert: KafkaTopicLag
+        expr: kafka_consumer_group_lag{job="kafka"} > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka konusu için 1000'den fazla mesaj birikmiş."
+          description: "Kafka konusu {{ $labels.topic }} için 1000'den fazla işlenmemiş mesaj var."
+
+      # MongoDB servisi kapalıysa alarm
+      - alert: MongoDBDown
+        expr: up{job="mongodb"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MongoDB servisi kapalı."
+          description: "MongoDB servisi erişilemiyor."
+
+  - name: "high-cpu-usage"
     rules:
-      - alert: "DiscoveryServerDown"
-        expr: up{job="discovery-server"} == 0
-        for: 1m
+      - alert: "HighCpuUsage"
+        expr: avg(rate(cpu_usage_seconds_total[5m])) by (instance) > 0.9
+        for: 2m
         labels:
           severity: "critical"
         annotations:
-          description: "Discovery server is down"
-          summary: "Discovery server is down"
-          
-  groups:
-  - name: "gateway-server"
+          description: "High CPU usage detected on {{ $labels.instance }}"
+          summary: "CPU usage exceeds 90% for more than 2 minutes"
+
+  - name: "disk-space"
     rules:
-      - alert: "GatewayServerDown"
-        expr: up{job="gateway-server"} == 0
-        for: 1m
+      - alert: "LowDiskSpace"
+        expr: (node_filesystem_free_bytes{job="node-exporter",fstype="ext4"} / node_filesystem_size_bytes{job="node-exporter",fstype="ext4"}) < 0.1
+        for: 5m
         labels:
-          severity: "critical"
+          severity: "warning"
         annotations:
-          description: "Gateway server is down"
-          summary: "Gateway server is down"
+          description: "Low disk space on {{ $labels.instance }}"
+          summary: "Disk space is less than 10% for more than 5 minutes"
+
+  - name: "disk-io"
+    rules:
+      - alert: "HighDiskIo"
+        expr: rate(disk_io_time_seconds_total{job="node-exporter"}[5m]) > 0.9
+        for: 2m
+        labels:
+          severity: "warning"
+        annotations:
+          description: "High disk I/O usage on {{ $labels.instance }}"
+          summary: "Disk I/O exceeds 90% for more than 2 minutes"
+
+
 
 
 
