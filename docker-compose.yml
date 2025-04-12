@@ -124,13 +124,22 @@ services:
       - "8080:8080"
 
   plan-service:
-    image: turkcell-plan-service
-    container_name: plan-service
-    ports:
-      - "8084:8084"
-    depends_on:
-      config-server:
-        condition: service_healthy
+  build:
+    context: ./plan-service
+    dockerfile: Dockerfile
+  image: turkcell-plan-service
+  container_name: plan-service
+  ports:
+    - "8084:8084"
+  depends_on:
+    config-server:
+      condition: service_healthy
+  environment:
+    SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
+    SPRING_DATASOURCE_USERNAME: postgres
+    SPRING_DATASOURCE_PASSWORD: test
+    SPRING_CLOUD_CONFIG_PROFILE: local
+    SPRING_CLOUD_CONFIG_URI: http://config-server:8089
 
     analytics-service:
     build:
