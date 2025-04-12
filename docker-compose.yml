@@ -124,26 +124,27 @@ services:
       - "8080:8080"
 
   plan-service:
-  build:
-    context: ./plan-service
-    dockerfile: Dockerfile
-  image: turkcell-plan-service
-  container_name: plan-service
-  ports:
-    - "8084:8084"
-  depends_on:
-    config-server:
-      condition: service_healthy
-  environment:
-    SPRING_PROFILES_ACTIVE: local               
-    SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
-    SPRING_DATASOURCE_USERNAME: postgres
-    SPRING_DATASOURCE_PASSWORD: test
-    SPRING_CLOUD_CONFIG_PROFILE: local
-    SPRING_CLOUD_CONFIG_URI: http://config-server:8089
+    build:
+      context: ./plan-service
+      dockerfile: Dockerfile
+    image: turkcell-plan-service
+    container_name: plan-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: test
+      SPRING_CLOUD_CONFIG_PROFILE: local
+      SPRING_CLOUD_CONFIG_URI: http://config-server:8089
 
 
-    analytics-service:
+
+  analytics-service:
     build:
       context: ./analytics-service
       dockerfile: Dockerfile
@@ -159,6 +160,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-analytics-service:5432/analytics-service
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
 
   customer-support-service:
     build:

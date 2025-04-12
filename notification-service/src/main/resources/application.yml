@@ -1,36 +1,48 @@
-spring:
-  application:
-    name: "notification-service"
-  cloud:   # billing & payment  ile async iletişim
-    function:
-      definition: billingPaymentFunction;userCreatedEventConsumer
-    stream:
-      defaultBinder: kafka
-      bindings:
-        billingPaymentFunction-in-0:
-          destination: billing-payment-topic
-          content-type: application/json
-          group: notification-group
-        userCreatedEventConsumer-in-0:
-          destination: user-created-topic
-          content-type: application/json
-          group: notification-group
-          consumer:
-            configuration:
-              spring.json.trusted.packages: io.github.ergulberke.event.user
-            auto-offset-reset: earliest
-      kafka:
-        binder:
-          brokers: localhost:9092
-  data:
-    mongodb:
-      uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
-server:
-  port: 8088
+# spring:
+#   application:
+#     name: "notification-service"
+#   cloud:   # billing & payment  ile async iletişim
+#     function:
+#       definition: billingPaymentFunction;userCreatedEventConsumer
+#     stream:
+#       defaultBinder: kafka
+#       bindings:
+#         billingPaymentFunction-in-0:
+#           destination: billing-payment-topic
+#           content-type: application/json
+#           group: notification-group
+#         userCreatedEventConsumer-in-0:
+#           destination: user-created-topic
+#           content-type: application/json
+#           group: notification-group
+#           consumer:
+#             configuration:
+#               spring.json.trusted.packages: io.github.ergulberke.event.user
+#             auto-offset-reset: earliest
+#       kafka:
+#         binder:
+#           brokers: localhost:9092
+#   data:
+#     mongodb:
+#       uri: mongodb://root:root@localhost:27017/notification-service?authSource=admin
+# server:
+#   port: 8088
+#
+# eureka:
+#   client:
+#     service-url:
+#       defaultZone: "http://localhost:8888/eureka/"
+#     register-with-eureka: true
+#     fetch-registry: true
 
-eureka:
-  client:
-    service-url:
-      defaultZone: "http://localhost:8888/eureka/"
-    register-with-eureka: true
-    fetch-registry: true
+spring:
+  port: 8088
+  application:
+    name: notificationservice
+  config:
+    import: configserver:http://config-server:8089
+  profiles:
+    active: local
+  cloud:
+    config:
+      profile: local
