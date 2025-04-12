@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                         // Deny all other requests
                         .anyRequest().authenticated())
-                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
