@@ -60,6 +60,11 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
         <!-- OpenAPI Documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>

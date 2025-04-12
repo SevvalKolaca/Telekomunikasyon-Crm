@@ -9,3 +9,4 @@ spring:
   cloud:
     config:
       profile: local
+

@@ -18,13 +18,24 @@ management:
   enpoint:
     health:
       show-details: always
-  metrics:
-    export:
-      prometheus:
-        enabled: true
   tracing:
     sampling:
       probability: 1.0
   zipkin:
     tracing:
       endpoint: "http://localhost:9411/api/v2/spans"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8888/eureka
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    hostname: config-server
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30

@@ -103,6 +103,19 @@ services:
     environment:
       SPRING_CLOUD_CONFIG_PROFILE: local
 
+  contract-service:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    image: turkcell-contract-service
+    container_name: contract_service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      SPRING_CLOUD_CONFIG_PROFILE: local
 
   config-server:
     build:

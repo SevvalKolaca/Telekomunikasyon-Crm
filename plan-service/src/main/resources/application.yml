@@ -1,13 +1,11 @@
 spring:
+  port: 8084
   application:
     name: plan-service
+  config:
+    import: configserver:http://config-server:8089
+  profiles:
+    active: local
   cloud:
     config:
-      uri: http://localhost:8089
       profile: local
-  config:
-    import: configserver:http://localhost:8089
-  profiles:
-    active: dev
-server:
-  port: 8084
