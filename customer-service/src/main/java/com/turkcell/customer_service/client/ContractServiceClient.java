@@ -1,9 +1,9 @@
 package com.turkcell.customer_service.client;
 
-import com.turkcell.contractservice.dtos.requests.CancelContractRequest;
-import com.turkcell.contractservice.dtos.requests.CreateContractRequest;
-import com.turkcell.contractservice.dtos.requests.UpdateContractRequest;
-import com.turkcell.contractservice.dtos.responses.GetContractResponse;
+import com.turkcell.customer_service.dto.Contract.CancelContractRequest;
+import com.turkcell.customer_service.dto.Contract.CreateContractRequest;
+import com.turkcell.customer_service.dto.Contract.UpdateContractRequest;
+import com.turkcell.customer_service.dto.Contract.GetContractResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

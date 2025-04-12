@@ -1,7 +1,7 @@
 package com.turkcell.customer_service.entity;
 
 import com.turkcell.customer_service.enums.AccountStatus;
-import com.turkcell.contractservice.entities.enums.BillingPlan;
+import com.turkcell.customer_service.enums.BillingPlan;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
