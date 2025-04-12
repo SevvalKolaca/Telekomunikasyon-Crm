@@ -1,7 +1,7 @@
 package com.turkcell.customer_support_service.config;
 
+import com.turkcell.customer_support_service.security.JwtAuthenticationFilter;
 import io.github.ergulberke.jwt.JwtTokenProvider;
-import jakarta.servlet.Filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,7 +50,7 @@ public class SecurityConfig {
 
                         // Deny all other requests
                         .anyRequest().authenticated())
-                .addFilterBefore((Filter) jwtTokenProvider, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
