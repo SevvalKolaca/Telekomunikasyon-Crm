@@ -135,11 +135,13 @@ services:
     config-server:
       condition: service_healthy
   environment:
+    SPRING_PROFILES_ACTIVE: local               
     SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
     SPRING_DATASOURCE_USERNAME: postgres
     SPRING_DATASOURCE_PASSWORD: test
     SPRING_CLOUD_CONFIG_PROFILE: local
     SPRING_CLOUD_CONFIG_URI: http://config-server:8089
+
 
     analytics-service:
     build:
