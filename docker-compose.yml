@@ -164,7 +164,7 @@ services:
 
   customer-support-service:
     build:
-      context: ./customer-support-service-service
+      context: ./customer-support-service
       dockerfile: Dockerfile
     image: turkcell-customer-support-service
     container_name: customer-support-service
