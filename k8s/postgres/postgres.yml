@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: test
+  POSTGRES_DB: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+
+spec:
+  replicas: 1 # kaç tane pod oluşturucaz ? kaç tane postgresql çalıştırıyoruz ?
+  selector:
+    matchLabels:   # labels>app kısmı "postgres" olanlarla eşleşiyor
+      app: postgres # labels>app kısmı "postgres" olanlarla eşleşiyor
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          ports:
+            - containerPort: 5432 # dış port burada verilmiyor
+          envFrom:
+            - configMapRef:
+                name: postgres-config   # ismi "postgres-config" olan confimap'ten env referans aldık
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  labels:
+    app: postgres
+
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi   # bu postgres için diskte max 3 gb yer ayırıyorum
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+
+spec:
+  type: NodePort
+  ports:
+    - port: 5432 # cluster içindeki postgresql service portu
+      targetPort: 5432 # pod içinde gideceği port
+      nodePort: 30007 # 30000 - 32767 arası kubernates tarafından dışardan erişim için ayrılmış portlar
+  selector:
+    app: postgres

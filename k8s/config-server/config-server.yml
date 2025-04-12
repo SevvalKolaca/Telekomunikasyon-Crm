@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-server-config
+  labels:
+    app: config-server
+data:
+  application.yml: |
+    server:
+      port: 8089
+    spring:
+      cloud:
+        config:
+          server:
+            git:
+              uri: https://github.com/ergulberke/crm-microservices-config.git
+              default-label: main
+              clone-on-start: true
+              force-pull: true
+              timeout: 5
+              search-paths: /*
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "*"
+      endpoint:
+        health:
+          show-details: always
+      tracing:
+        sampling:
+          probability: 1.0
+        zipkin:
+          base-url: http://zipkin:9411
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: rabiademirog/turkcell-config-server:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8089
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "400m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8089
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8089
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: config-server-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-server
+  labels:
+    app: config-server
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8089
+      targetPort: 8089
+      protocol: TCP
+  selector:
+    app: config-server 

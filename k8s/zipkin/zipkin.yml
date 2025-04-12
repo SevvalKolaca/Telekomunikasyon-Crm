@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: zipkin-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/zipkin"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: zipkin-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin
+  namespace: default
+  labels:
+    app: zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin
+  template:
+    metadata:
+      labels:
+        app: zipkin
+    spec:
+      containers:
+      - name: zipkin
+        image: openzipkin/zipkin:latest
+        ports:
+        - containerPort: 9411
+        env:
+        - name: STORAGE_TYPE
+          value: "mem"
+        - name: JAVA_OPTS
+          value: "-XX:+UnlockExperimentalVMOptions -Xms128m -Xmx256m"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9411
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9411
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        volumeMounts:
+          - name: zipkin-storage
+            mountPath: /zipkin
+      volumes:
+        - name: zipkin-storage
+          persistentVolumeClaim:
+            claimName: zipkin-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin
+  namespace: default
+  labels:
+    app: zipkin
+spec:
+  type: NodePort
+  ports:
+  - port: 9411
+    targetPort: 9411
+    nodePort: 30411
+    protocol: TCP
+    name: http
+  selector:
+    app: zipkin 

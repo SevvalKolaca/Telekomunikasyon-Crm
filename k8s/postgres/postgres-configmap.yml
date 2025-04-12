@@ -10,8 +10,6 @@ data:
   POSTGRES_DB: postgres
 
 
-
-
 # TERMİNALDE
 # kubectl apply -f [bu dosyanın yolu]
 # sonrasında --> kubectl get config yazarak kontrol
