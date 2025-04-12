@@ -31,6 +31,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+
+                        // actuator endpoint'leri herkes tarafından erişilebilir
+                        .requestMatchers("/actuator/**").permitAll()
                         // public endpoints önce yazılmalı !!!
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()  // LOGIN sayfasını açık bırakıyoruz
                         .requestMatchers("/error").permitAll()
