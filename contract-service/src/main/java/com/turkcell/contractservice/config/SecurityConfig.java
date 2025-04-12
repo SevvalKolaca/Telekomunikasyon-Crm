@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-                .headers(headers -> headers.frameOptions().disable());
+                .headers(headers -> headers.frameOptions(f -> f.disable()));
 
         return http.build();
     }
