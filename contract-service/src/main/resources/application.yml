@@ -1,11 +1,11 @@
-configurl: http://localhost:8089
-
 spring:
+  port: 8087
   application:
-    name: "contractservice"
+    name: contractservice
+  config:
+    import: configserver:http://config-server:8089
+  profiles:
+    active: local
   cloud:
     config:
       profile: local
-  config:
-    import: configserver:${configurl}
-

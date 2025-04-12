@@ -47,6 +47,18 @@ services:
     volumes:
       - pg3_data:/var/lib/postgresql/data
 
+  pg-contract-service:
+    image: postgres
+    container_name: "pg-contract-service"
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=contractservice
+    volumes:
+      - contractservice_data:/var/lib/postgresql/data
+
   pg-user-service:
     image: postgres
     container_name: "pg-user-service"
@@ -89,6 +101,19 @@ services:
     environment:
       SPRING_CLOUD_CONFIG_PROFILE: local
 
+  contract-service:
+    build:
+      context: ./contract-service
+      dockerfile: Dockerfile
+    image: turkcell-contract-service
+    container_name: contract_service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      SPRING_CLOUD_CONFIG_PROFILE: local
 
   config-server:
     build:
