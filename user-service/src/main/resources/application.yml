@@ -15,3 +15,17 @@ eureka:
   instance:
     prefer-ip-address: true
     hostname: user-service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+  endpoint:
+    health:
+      show-details: always
+
+  health:
+    probes:
+      enabled: true
