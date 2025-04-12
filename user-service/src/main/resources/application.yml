@@ -1,43 +1,17 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: user-service
-  datasource:
-    url: jdbc:postgresql://localhost:5435/userservice #billing ile aynı portta- customer değişince onun yerini alalım pls
-    username: postgres
-    password: test 
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        jdbc:
-          time_zone: UTC
-    open-in-view: false  # OSIV (Open Session in View) pattern'i devre dışı bırakır
 
-  kafka:
-    bootstrap-servers: localhost:9092   # Kafka broker adresi
+  config:
+    import: optional:configserver:http://config-server:8089
 
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8888/eureka
-    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-server:8888/eureka
     register-with-eureka: true
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    hostname: localhost
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 30
+    fetch-registry: true
 
-logging:
-  level:
-    org:
-      springframework:
-        security: TRACE
+  instance:
+    prefer-ip-address: true
+    hostname: user-service

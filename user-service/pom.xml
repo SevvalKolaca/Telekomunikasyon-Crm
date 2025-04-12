@@ -142,6 +142,10 @@
 			<version>2.3.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 
 		<!-- KAFKA -->
 		<dependency>
@@ -153,12 +157,6 @@
 			<artifactId>spring-kafka-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>io.github.ergulberke</groupId>
-            <artifactId>turkcell-t2</artifactId>
-            <version>2.1.6</version>
-            <scope>compile</scope>
-        </dependency>
 
     </dependencies>
 	<dependencyManagement>

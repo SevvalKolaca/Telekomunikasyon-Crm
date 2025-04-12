@@ -1,15 +1,12 @@
-# 1. Temel imaj
-FROM openjdk:21-jdk-slim
+FROM maven:3.9.6-eclipse-temurin-21 as build
 
-# 2. Uygulama çalışma dizini
 WORKDIR /app
+COPY . /app/
 
-# 3. jar dosyasının kopyalanması
-# target klasöründe oluşan jar dosyasının ismi
-COPY target/user-service.jar user-service.jar
+RUN mvn clean package -DskipTests
 
-# 4. Uygulama portu (application.properties’te hangi portu dinliyorsak)
+FROM eclipse-temurin:21-jdk
+COPY --from=build /app/target/user-service.jar /app/user-service.jar
+
 EXPOSE 8081
-
-# 5. Container ayağa kalktığında jar'ı çalıştırın
-ENTRYPOINT ["java", "-jar", "user-service.jar"]
+ENTRYPOINT ["java", "-jar", "/app/user-service.jar"]
