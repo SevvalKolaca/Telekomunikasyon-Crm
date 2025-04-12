@@ -1,7 +1,7 @@
 package com.turkcell.customer_service.dto;
 
 import com.turkcell.customer_service.enums.AccountStatus;
-import com.turkcell.contractservice.entities.enums.BillingPlan;
+import com.turkcell.customer_service.enums.BillingPlan;
 import com.turkcell.customer_service.validation.TurkishPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

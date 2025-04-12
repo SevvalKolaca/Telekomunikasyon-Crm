@@ -1,8 +1,5 @@
 package com.turkcell.customer_service.service;
 
-import com.turkcell.contractservice.dtos.requests.CancelContractRequest;
-import com.turkcell.contractservice.dtos.requests.CreateContractRequest;
-import com.turkcell.contractservice.dtos.requests.UpdateContractRequest;
 import com.turkcell.customer_service.client.PlanServiceClient;
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
@@ -10,10 +7,14 @@ import com.turkcell.customer_service.dto.Plan.PlanResponse;
 import com.turkcell.customer_service.entity.Customer;
 import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinnessRules;
-import com.turkcell.contractservice.dtos.responses.GetContractResponse;
-import com.turkcell.contractservice.entities.enums.BillingPlan;
 import com.turkcell.customer_service.client.ContractServiceClient;
 import io.github.ergulberke.event.customer.CustomerCreatedEvent;
+import com.turkcell.customer_service.enums.BillingPlan;
+import com.turkcell.customer_service.dto.Contract.CreateContractRequest;
+import com.turkcell.customer_service.dto.Contract.GetContractResponse;
+import com.turkcell.customer_service.dto.Contract.UpdateContractRequest;
+import com.turkcell.customer_service.dto.Contract.CancelContractRequest;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,14 +61,21 @@ public class CustomerServiceImpl implements CustomerService {
         customerProducer.sendCustomerCreatedEvent(event);
 
         // Otomatik olarak sözleşme oluştur
-        CreateContractRequest contractRequest = new CreateContractRequest();
+        /*CreateContractRequest contractRequest = new CreateContractRequest();
         contractRequest.setContractNumber("CNT-" + System.currentTimeMillis()); // Benzersiz bir sözleşme numarası oluştur
         contractRequest.setStartDate(LocalDateTime.now());
         contractRequest.setEndDate(LocalDateTime.now().plusYears(1)); // Varsayılan olarak 1 yıllık sözleşme
         contractRequest.setCustomerId(savedCustomer.getId().toString());
         contractRequest.setBillingPlan(request.getBillingPlan());
-        contractServiceClient.add(contractRequest);
+        contractServiceClient.add(contractRequest);*/
 
+        CreateContractRequest contractRequest =new CreateContractRequest();
+        contractRequest.setContractNumber("CNT-"+System.currentTimeMillis());
+        contractRequest.setStartDate(LocalDateTime.now());
+        contractRequest.setEndDate(LocalDateTime.now().plusYears(1)); // Varsayılan olarak 1 yıllık sözleşme
+        contractRequest.setCustomerId(savedCustomer.getId().toString());
+        contractRequest.setBillingPlan(request.getBillingPlan());
+        contractServiceClient.add(contractRequest);
         return buildCustomerResponse(savedCustomer);
     }
 

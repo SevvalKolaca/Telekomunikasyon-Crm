@@ -2,8 +2,8 @@ package com.turkcell.customer_service.service;
 
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
-import com.turkcell.contractservice.dtos.responses.GetContractResponse;
-import com.turkcell.contractservice.entities.enums.BillingPlan;
+import com.turkcell.customer_service.dto.Contract.GetContractResponse;
+import com.turkcell.customer_service.enums.BillingPlan;
 
 import java.time.LocalDateTime;
 import java.util.List;
