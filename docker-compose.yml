@@ -1,7 +1,7 @@
 services:
   pg-analytics-service:
     image: postgres
-    container_name:  "pg-analytics-service-1"
+    container_name:  "pg-analytics-service"
     ports:
       - "5432:5432"
     environment:
@@ -10,6 +10,18 @@ services:
       - POSTGRES_DB=analytics-service
     volumes:
       - pg_analytics_service_data:/var/lib/postgresql/data
+
+  pg-customer-support-service:
+    image: postgres
+    container_name: "pg-customer-support-service"
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=customer-support-service
+    volumes:
+      - pg_customer_support_service_data:/var/lib/postgresql/data
 
   pg-2:
     image: postgres
@@ -120,19 +132,35 @@ services:
       config-server:
         condition: service_healthy
 
-  analytics-service:
+    analytics-service:
     build:
       context: ./analytics-service
       dockerfile: Dockerfile
     image: turkcell-analytics-service
-    container_name: pg-analytics-service
+    container_name: analytics-service
     ports:
-      - "8083:8083"
+      - "8087:8087"
     depends_on:
-      - kafka
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_started
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-analytics-service:5432/analytics-service
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
+  customer-support-service:
+    build:
+      context: ./customer-support-service-service
+      dockerfile: Dockerfile
+    image: turkcell-customer-support-service
+    container_name: customer-support-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
 
   notification-service:
     build:
