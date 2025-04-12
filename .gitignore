@@ -29,6 +29,7 @@ replay_pid*
 .settings/
 .project
 .classpath
+.idea/compiler.xml
 
 # Maven
 target/
