@@ -20,7 +20,7 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2023.0.0</spring-cloud.version>
-        <turkcell-t2.version>2.1.6</turkcell-t2.version>
+        <turkcell-t2.version>2.1.7</turkcell-t2.version>
     </properties>
 
     <dependencies>
