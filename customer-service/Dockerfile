@@ -1,11 +1,11 @@
-FROM maven:3.8.4-openjdk-17-slim AS build
+FROM maven:3.9.6-eclipse-temurin-21 as build
+
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
+COPY . /app/
+
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "app.jar"] 
+FROM eclipse-temurin:21-jdk
+COPY --from=build /app/target/customer-service-0.0.1-SNAPSHOT.jar /app/customer-service.jar
+
+ENTRYPOINT ["java", "-jar", "/app/customer-service.jar"]

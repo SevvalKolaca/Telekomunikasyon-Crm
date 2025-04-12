@@ -217,22 +217,6 @@ services:
       - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongo:27017/notification_db?authSource=admin
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
-
-  contract-service:
-    build:
-      context: ./contract-service
-      dockerfile: Dockerfile
-    image: turkcell-contract-service
-    container_name: contract-service
-    ports:
-      - "8083:8083"
-    depends_on:
-      config-server:
-        condition: service_healthy
-    environment:
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8089/
-      - SPRING_PROFILES_ACTIVE=local
-
   kafka:
     image: bitnami/kafka
     container_name: "kafka"

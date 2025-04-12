@@ -43,11 +43,13 @@ server:
   port: 8080
 
 eureka:
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    hostname: localhost
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8888/eureka
+    service-url:
+      defaultZone: http://discovery-server:8888/eureka
     fetch-registry: true
     register-with-eureka: true
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    hostname: config-server
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30

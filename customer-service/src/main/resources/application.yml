@@ -31,18 +31,13 @@ server:
 
 eureka:
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8888/eureka
+    service-url:
+      defaultZone: http://discovery-server:8888/eureka
     fetch-registry: true
     register-with-eureka: true
-    eureka-server-connect-timeout-seconds: 5
-    eureka-server-read-timeout-seconds: 5
-    eureka-server-total-connections: 200
-    eureka-server-total-connections-per-host: 50
-    eureka-connection-idle-timeout-seconds: 30
   instance:
     instance-id: ${spring.application.name}:${server.port}
-    hostname: localhost
+    hostname: config-server
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
 
