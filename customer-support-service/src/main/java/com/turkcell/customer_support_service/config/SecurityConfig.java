@@ -1,7 +1,7 @@
 package com.turkcell.customer_support_service.config;
 
 import io.github.ergulberke.jwt.JwtTokenProvider;
-import jakarta.servlet.Filter;
+import io.github.ergulberke.jwt.JwtTokenProvider;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
