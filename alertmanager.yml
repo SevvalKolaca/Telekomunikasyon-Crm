@@ -8,8 +8,8 @@ global:
 route:
   receiver: "email-alert"  # Varsayılan alıcı
   group_by: ['alertname']  # Alarmları gruplandırırken hangi etiketlerin dikkate alınacağını belirtir
-  group_wait: 30s         # Gruplama işlemi başlatıldığında ne kadar süre bekleyeceğini belirtir
-  group_interval: 5m      # Aynı alarmı tekrar bildirecekse, ne kadar süre bekleyeceğini belirtir
+  group_wait: 10s         # Gruplama işlemi başlatıldığında ne kadar süre bekleyeceğini belirtir
+  group_interval: 1m      # Aynı alarmı tekrar bildirecekse, ne kadar süre bekleyeceğini belirtir
   repeat_interval: 3h     # Aynı alarm tekrarlandığında, ne kadar süre sonra tekrar bildirileceğini belirtir
 
 receivers:
