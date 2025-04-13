@@ -1,50 +1,62 @@
+#spring:
+#  application:
+#    name: "customer-service"
+#  cloud:
+#    stream:
+#      function:
+#        definition: customerCreatedFunction
+#      bindings:
+#        customerCreatedFunction-out-0:
+#          destination: customer-topic
+#          content-type: application/json
+#      kafka:
+#        binder:
+#          brokers: localhost
+#          defaultBrokerPort: 9092
+#  datasource:
+#    url: "jdbc:mysql://localhost:3306/my_database?useSSL=false&serverTimezone=UTC"
+#    username: myuser
+#    password: test
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#
+#server:
+#  port: 8082
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://discovery-server:8888/eureka
+#    fetch-registry: true
+#    register-with-eureka: true
+#  instance:
+#    instance-id: ${spring.application.name}:${server.port}
+#    hostname: config-server
+#    prefer-ip-address: true
+#    lease-renewal-interval-in-seconds: 30
+#
+#plan:
+#  service:
+#    url: http://localhost:8084
+#
+#contract:
+#  service:
+#    url: http://localhost:8083
+
 spring:
+  port: 8085
   application:
-    name: "customer-service"
+    name: customerservice
+  config:
+    import: configserver:http://config-server:8089
+  profiles:
+    active: local
   cloud:
-    stream:
-      function:
-        definition: customerCreatedFunction
-      bindings:
-        customerCreatedFunction-out-0:
-          destination: customer-topic
-          content-type: application/json
-      kafka:
-        binder:
-          brokers: localhost
-          defaultBrokerPort: 9092
-  datasource:
-    url: "jdbc:mysql://localhost:3306/my_database?useSSL=false&serverTimezone=UTC"
-    username: myuser
-    password: test
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-
-server:
-  port: 8082
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://discovery-server:8888/eureka
-    fetch-registry: true
-    register-with-eureka: true
-  instance:
-    instance-id: ${spring.application.name}:${server.port}
-    hostname: config-server
-    prefer-ip-address: true
-    lease-renewal-interval-in-seconds: 30
-
-plan:
-  service:
-    url: http://localhost:8084
-
-contract:
-  service:
-    url: http://localhost:8083
+    config:
+      profile: local
