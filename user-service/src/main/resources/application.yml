@@ -29,3 +29,9 @@ management:
   health:
     probes:
       enabled: true
+
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Prometheus için metrikleri açar
+
