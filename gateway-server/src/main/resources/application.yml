@@ -53,3 +53,13 @@ eureka:
     hostname: config-server
     prefer-ip-address: true
     lease-renewal-interval-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
