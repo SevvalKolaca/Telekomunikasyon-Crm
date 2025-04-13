@@ -50,7 +50,7 @@
 #    url: http://localhost:8083
 
 spring:
-  port: 8085
+  port: 8082
   application:
     name: customerservice
   config:
