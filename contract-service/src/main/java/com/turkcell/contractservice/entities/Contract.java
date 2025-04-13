@@ -3,7 +3,7 @@ package com.turkcell.contractservice.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.turkcell.contractservice.entities.enums.BillingPlan;
+import com.turkcell.contractservice.entities.enums.BillingPeriod;
 import com.turkcell.contractservice.entities.enums.ContractStatus;
 
 import jakarta.persistence.Column;
@@ -35,16 +35,21 @@ public class Contract {
     
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String customerId;
-    
+
+    @Column(name = "customer_id", nullable = false, columnDefinition = "uuid")
+    private UUID customerId;
+
+    @Column(name = "plan_id", nullable = false, columnDefinition = "uuid")
+    private UUID planId;
+
     @Enumerated(EnumType.STRING)
-    private BillingPlan billingPlan;
+    private BillingPeriod billingPeriod;
     
     @Enumerated(EnumType.STRING)
     private ContractStatus status;
     
-    private boolean isActive;
-    private double monthlyFee;
+    private Boolean isActive;
+    private Double price;
     
     private String cancellationReason;
     private LocalDateTime cancellationDate;
@@ -58,7 +63,6 @@ public class Contract {
         lastUpdateDate = LocalDateTime.now();
         status = ContractStatus.ACTIVE;
         isActive = true;
-        monthlyFee = billingPlan.calculateMonthlyFee();
     }
     
     @PreUpdate
@@ -83,8 +87,7 @@ public class Contract {
         this.isActive = true;
     }
     
-    public void updateBillingPlan(BillingPlan newPlan) {
-        this.billingPlan = newPlan;
-        this.monthlyFee = newPlan.calculateMonthlyFee();
+    public void updateBillingPeriod(BillingPeriod newPeriod) {
+        this.billingPeriod = newPeriod;
     }
 } 

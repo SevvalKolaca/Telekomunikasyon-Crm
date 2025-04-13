@@ -15,7 +15,7 @@ public interface ContractService {
     GetContractResponse getById(UUID id);
     void delete(UUID id);
     void update(UUID id, UpdateContractRequest request);
-    List<GetContractResponse> getByCustomerId(String customerId);
+    List<GetContractResponse> getByCustomerId(UUID customerId);
     void updateStatus(UUID id, ContractStatus status);
     void cancelContract(UUID id, CancelContractRequest request);
     void suspendContract(UUID id);

@@ -1,6 +1,5 @@
 package com.turkcell.contractservice.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +19,6 @@ import com.turkcell.contractservice.dtos.requests.CancelContractRequest;
 import com.turkcell.contractservice.dtos.requests.CreateContractRequest;
 import com.turkcell.contractservice.dtos.requests.UpdateContractRequest;
 import com.turkcell.contractservice.dtos.responses.GetContractResponse;
-import com.turkcell.contractservice.entities.enums.BillingPlan;
 import com.turkcell.contractservice.entities.enums.ContractStatus;
 import com.turkcell.contractservice.services.ContractService;
 
@@ -50,7 +48,7 @@ public class ContractsController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public List<GetContractResponse> getByCustomerId(@PathVariable String customerId) {
+    public List<GetContractResponse> getByCustomerId(@PathVariable UUID customerId) {
         return service.getByCustomerId(customerId);
     }
 
@@ -85,8 +83,4 @@ public class ContractsController {
         service.reactivateContract(id);
     }
 
-    @GetMapping("/billing-plans")
-    public List<BillingPlan> getBillingPlans() {
-        return Arrays.asList(BillingPlan.values());
-    }
 } 
