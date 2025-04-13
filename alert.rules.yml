@@ -1,130 +1,145 @@
 groups:
-  - name: example-alerts
+  - name: service_alerts
     rules:
-      # Bir konteyner 5 dakika boyunca kapalıysa alarm
-      - alert: ContainerDown
-        expr: up == 0
-        for: 5m
+      # Servis Down Durumları
+      - alert: ConfigServerDown
+        expr: up{job="config-server-app"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Konteyner {{ $labels.container }} 5 dakikadır kapalı."
-          description: "Konteyner {{ $labels.container }} servisinde 5 dakikadır bir problem var."
+          description: "Config Server is down for more than 1 minute."
+          summary: "Config Server is not responding."
 
-      # PostgreSQL veritabanı sağlıklı değilse alarm
-      - alert: PostgresDown
-        expr: pg_up{job="postgres"} == 0
-        for: 5m
+      - alert: ContractServiceDown
+        expr: up{job="contract-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "PostgreSQL veritabanı {{ $labels.container }} sağlıklı değil."
-          description: "PostgreSQL veritabanı {{ $labels.container }} yanıt vermiyor."
+          description: "Contract Service is down for more than 1 minute."
+          summary: "Contract Service is not responding."
 
-      # Kafka broker'ı kapalıysa alarm
-      - alert: KafkaBrokerDown
-        expr: kafka_consumer_group_lag{job="kafka"} == 0
-        for: 5m
+      - alert: UserServiceDown
+        expr: up{job="user-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Kafka broker'ı kapalı veya gecikiyor."
-          description: "Kafka broker'ı mesajları beklediği gibi işleyemiyor."
+          description: "User Service is down for more than 1 minute."
+          summary: "User Service is not responding."
 
-      # Bir servisin sağlık kontrolü başarısızsa alarm
-      - alert: ServiceHealthCheckFailed
-        expr: up{job="service", status="unhealthy"} == 0
-        for: 5m
+      - alert: AnalyticsServiceDown
+        expr: up{job="analytics-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Servis {{ $labels.service }} sağlık kontrolünü geçemedi."
-          description: "Servis {{ $labels.service }} sağlık kontrolü başarısız oldu."
+          description: "Analytics Service is down for more than 1 minute."
+          summary: "Analytics Service is not responding."
 
-      # MySQL servisi kapalıysa alarm
-      - alert: MysqlDown
-        expr: mysql_up == 0
-        for: 5m
+      - alert: CustomerSupportServiceDown
+        expr: up{job="customer-support-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "MySQL servisi kapalı."
-          description: "MySQL servisi erişilemiyor."
+          description: "Customer Support Service is down for more than 1 minute."
+          summary: "Customer Support Service is not responding."
 
-      # Prometheus metrikleri almıyorsa alarm
-      - alert: PrometheusScrapeFailed
-        expr: prometheus_target_last_scrape_duration_seconds{job="prometheus"} > 5
-        for: 5m
+      - alert: BillingPaymentServiceDown
+        expr: up{job="billing-payment-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Prometheus {{ $labels.target }}'den metrik alamadı."
-          description: "Prometheus {{ $labels.target }} hedefinden 5 dakikadır metrik alamıyor."
+          description: "Billing Payment Service is down for more than 1 minute."
+          summary: "Billing Payment Service is not responding."
 
-      # Grafana servisi kapalıysa alarm
-      - alert: GrafanaDown
-        expr: up{job="grafana"} == 0
-        for: 5m
+      - alert: PlanServiceDown
+        expr: up{job="plan-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "Grafana servisi kapalı."
-          description: "Grafana servisi erişilemiyor."
+          description: "Plan Service is down for more than 1 minute."
+          summary: "Plan Service is not responding."
 
-      # Kafka'da bir konuda çok fazla mesaj bekleniyorsa alarm
-      - alert: KafkaTopicLag
-        expr: kafka_consumer_group_lag{job="kafka"} > 1000
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka konusu için 1000'den fazla mesaj birikmiş."
-          description: "Kafka konusu {{ $labels.topic }} için 1000'den fazla işlenmemiş mesaj var."
-
-      # MongoDB servisi kapalıysa alarm
-      - alert: MongoDBDown
-        expr: up{job="mongodb"} == 0
-        for: 5m
+      - alert: CustomerServiceDown
+        expr: up{job="customer-service"} == 0
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "MongoDB servisi kapalı."
-          description: "MongoDB servisi erişilemiyor."
+          description: "Customer Service is down for more than 2 minutes."
+          summary: "Customer Service is not responding."
 
-  - name: "high-cpu-usage"
-    rules:
-      - alert: "HighCpuUsage"
-        expr: avg(rate(cpu_usage_seconds_total[5m])) by (instance) > 0.9
+      - alert: NotificationServiceDown
+        expr: up{job="notification-service"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "Notification Service is down for more than 2 minutes."
+          summary: "Notification Service is not responding."
+
+      - alert: GatewayServerDown
+        expr: up{job="gateway-server"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "Gateway Server is down for more than 2 minutes."
+          summary: "Gateway Server is not responding."
+
+      - alert: DiscoveryServerDown
+        expr: up{job="discovery-server"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          description: "Discovery Server is down for more than 2 minutes."
+          summary: "Discovery Server is not responding."
+
+      # CPU Kullanımı (Örneğin %90'ı aşarsa alarm)
+      - alert: HighCPUUsage
+        expr: avg(rate(process_cpu_seconds_total{job="telekom-crm"}[1m])) by (instance) > 0.9
         for: 2m
         labels:
-          severity: "critical"
+          severity: critical
         annotations:
-          description: "High CPU usage detected on {{ $labels.instance }}"
-          summary: "CPU usage exceeds 90% for more than 2 minutes"
+          description: "CPU usage is over 90% for more than 2 minutes."
+          summary: "High CPU usage detected."
 
-  - name: "disk-space"
-    rules:
-      - alert: "LowDiskSpace"
-        expr: (node_filesystem_free_bytes{job="node-exporter",fstype="ext4"} / node_filesystem_size_bytes{job="node-exporter",fstype="ext4"}) < 0.1
-        for: 5m
-        labels:
-          severity: "warning"
-        annotations:
-          description: "Low disk space on {{ $labels.instance }}"
-          summary: "Disk space is less than 10% for more than 5 minutes"
-
-  - name: "disk-io"
-    rules:
-      - alert: "HighDiskIo"
-        expr: rate(disk_io_time_seconds_total{job="node-exporter"}[5m]) > 0.9
+      # Bellek Kullanımı (Örneğin %90'ı aşarsa alarm)
+      - alert: HighMemoryUsage
+        expr: avg(process_resident_memory_bytes{job="telekom-crm"}) by (instance) / avg(process_virtual_memory_bytes{job="telekom-crm"}) by (instance) > 0.9
         for: 2m
         labels:
-          severity: "warning"
+          severity: critical
         annotations:
-          description: "High disk I/O usage on {{ $labels.instance }}"
-          summary: "Disk I/O exceeds 90% for more than 2 minutes"
+          description: "Memory usage is over 90% for more than 2 minutes."
+          summary: "High memory usage detected."
 
+      # Disk Kullanımı (Örneğin %90'ı aşarsa alarm)
+      - alert: HighDiskUsage
+        expr: (node_filesystem_size_bytes{job="telekom-crm",fstype="ext4"} - node_filesystem_free_bytes{job="telekom-crm",fstype="ext4"}) / node_filesystem_size_bytes{job="telekom-crm",fstype="ext4"} > 0.9
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          description: "Disk usage is over 90% for more than 2 minutes."
+          summary: "High disk usage detected."
 
+      # Ağ Trafiği (Örneğin, gelen ve giden ağ trafiği yüksekse alarm)
+      - alert: HighNetworkTraffic
+        expr: (rate(node_network_receive_bytes_total{job="telekom-crm"}[1m]) + rate(node_network_transmit_bytes_total{job="telekom-crm"}[1m])) > 100000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          description: "Network traffic is very high."
+          summary: "High network traffic detected."
 
 
 
