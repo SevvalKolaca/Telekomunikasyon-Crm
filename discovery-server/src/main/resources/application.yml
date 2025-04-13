@@ -13,3 +13,13 @@ eureka:
       defaultZone: "http://localhost:8888/eureka"
     register-with-eureka: false
     fetch-registry: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
