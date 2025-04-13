@@ -32,6 +32,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
 
+                        // swagger endpointleri
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                         // actuator endpoint'leri herkes tarafından erişilebilir
                         .requestMatchers("/actuator/**").permitAll()
                         // public endpoints önce yazılmalı !!!
