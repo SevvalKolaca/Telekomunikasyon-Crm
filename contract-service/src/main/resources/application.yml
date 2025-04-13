@@ -3,7 +3,7 @@ spring:
   application:
     name: contractservice
   config:
-    import: configserver:http://config-server:8089
+    import: configserver:http://config-server:8089/
   profiles:
     active: local
   cloud:

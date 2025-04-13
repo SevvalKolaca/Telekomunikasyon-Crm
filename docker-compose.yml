@@ -195,6 +195,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: test
       SPRING_CLOUD_CONFIG_PROFILE: local
       SPRING_CLOUD_CONFIG_URI: http://config-server:8089
+      SPRING_CONFIG_IMPORT: configserver:http://config-server:8089/
 
 
 
