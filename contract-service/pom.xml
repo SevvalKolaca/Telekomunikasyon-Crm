@@ -27,10 +27,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-             <dependency>
+        <dependency>
 		<groupId>io.micrometer</groupId>
 		<artifactId>micrometer-registry-prometheus</artifactId>
-</dependency>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -109,7 +109,6 @@
 
         <dependency>
             <groupId>org.springframework.security</groupId>
-
             <artifactId>spring-security-config</artifactId>
         </dependency>
         <dependency>

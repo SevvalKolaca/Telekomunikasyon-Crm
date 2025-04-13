@@ -37,7 +37,6 @@
 # configurl: http://localhost:8089
 
 spring:
-  port: 8085
   application:
     name: billingpaymentservice
   config:
@@ -46,16 +45,17 @@ spring:
     active: local
   cloud:
     config:
+      profile: local
 
+server:
+  port: 8085
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
-  metrics:
-    export:
-      prometheus:
-        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
-
-      profile: local
+  prometheus:
+    metrics:
+      export:
+        enabled: true

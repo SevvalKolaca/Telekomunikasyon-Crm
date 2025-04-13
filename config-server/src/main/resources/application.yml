@@ -15,7 +15,7 @@ management:
     web:
       exposure:
         include: "*"
-  enpoint:
+  endpoint:
     health:
       show-details: always
   tracing:
@@ -23,7 +23,7 @@ management:
       probability: 1.0
   zipkin:
     tracing:
-      endpoint: "http://localhost:9411/api/v2/spans"
+      endpoint: "http://zipkin:9411/api/v2/spans"
   prometheus:
     metrics:
       export:

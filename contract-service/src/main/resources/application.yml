@@ -1,5 +1,4 @@
 spring:
-  port: 8083
   application:
     name: contractservice
   config:
@@ -10,12 +9,15 @@ spring:
     config:
       profile: local
 
+server:
+  port: 8083
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
-  metrics:
-    export:
-      prometheus:
-        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
+  prometheus:
+    metrics:
+      export:
+        enabled: true
