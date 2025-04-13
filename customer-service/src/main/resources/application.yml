@@ -53,12 +53,14 @@ spring:
   port: 8082
   application:
     name: customerservice
-  config:
-    import: configserver:http://config-server:8089
-  profiles:
-    active: local
   cloud:
     config:
+      uri: http://config-server:8089
+      fail-fast: false
+      retry:
+        initial-interval: 1500
+        max-interval: 10000
+        max-attempts: 10
       profile: local
 
 management:

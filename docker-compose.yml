@@ -242,6 +242,45 @@ services:
         condition: service_started
 
 
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: Dockerfile
+    image: turkcell-customer-service
+    container_name: customer-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_database?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=test
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=true
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_KAFKA_CONSUMER_GROUP_ID=customer-service-group
+      - SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET=earliest
+      - SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
+      - SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
+      - SPRING_KAFKA_PRODUCER_KEY_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
+      - SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8888/eureka/
+      - SPRING_CLOUD_CONFIG_PROFILE=localdevad
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8089
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8089
+    depends_on:
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      gateway-server:
+        condition: service_started
+      mysql:
+        condition: service_started
+
+
   notification-service:
     build:
       context: ./notification-service
@@ -354,37 +393,7 @@ services:
       KAFKA_BROKERCONNECT: "kafka:9092"
       JVM_OPTS: "-Xms32M -Xmx64M"
 
-  customer-service:
-    build:
-      context: ./customer-service
-      dockerfile: Dockerfile
-    container_name: customer-service
-    ports:
-      - "8082:8082"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/my_database?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=myuser
-      - SPRING_DATASOURCE_PASSWORD=test
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_SHOW_SQL=true
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - SPRING_KAFKA_CONSUMER_GROUP_ID=customer-service-group
-      - SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET=earliest
-      - SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
-      - SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
-      - SPRING_KAFKA_PRODUCER_KEY_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
-      - SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8888/eureka/
-    depends_on:
-      kafka:
-        condition: service_started
-      discovery-server:
-        condition: service_started
-      gateway-server:
-        condition: service_started
-      mysql:
-        condition: service_started
+
 
 volumes:
   pg_analytics_service_data:
