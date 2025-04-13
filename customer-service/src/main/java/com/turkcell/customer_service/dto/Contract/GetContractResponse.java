@@ -1,6 +1,6 @@
 package com.turkcell.customer_service.dto.Contract;
 
-import com.turkcell.customer_service.enums.BillingPlan;
+import com.turkcell.customer_service.enums.BillingPeriod;
 import com.turkcell.customer_service.enums.ContractStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +17,12 @@ public class GetContractResponse {
     private String contractNumber;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private String customerId;
-    private BillingPlan billingPlan;
+    private UUID customerId;
+    private UUID planId;
+    private BillingPeriod billingPeriod;
     private ContractStatus status;
-    private boolean isActive;
-    private double monthlyFee;
+    private Boolean isActive;
+    private Double price;
     private String cancellationReason;
     private LocalDateTime cancellationDate;
     private LocalDateTime lastUpdateDate;

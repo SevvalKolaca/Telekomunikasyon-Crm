@@ -1,9 +1,8 @@
 package com.turkcell.customer_service.dto;
 
 import com.turkcell.customer_service.enums.AccountStatus;
-import com.turkcell.customer_service.enums.BillingPlan;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.turkcell.customer_service.enums.BillingPeriod;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,8 +28,7 @@ public class CustomerResponse {
     private LocalDateTime updatedAt;
     private AccountStatus accountStatus;
     private UUID planId;
-    private String planName;
     private LocalDate planStartDate;
     private LocalDate planEndDate;
-    private BillingPlan billingPlan;
+    private BillingPeriod billingPeriod;
 }
