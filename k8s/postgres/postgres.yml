@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -9,18 +10,28 @@ data:
   POSTGRES_PASSWORD: test
   POSTGRES_DB: postgres
 ---
+# "userservice" veritabanını oluşturacak init script içeren ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  labels:
+    app: postgres
+data:
+  init-userservice.sql: |
+    CREATE DATABASE userservice;
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
   labels:
     app: postgres
-
 spec:
-  replicas: 1 # kaç tane pod oluşturucaz ? kaç tane postgresql çalıştırıyoruz ?
+  replicas: 1
   selector:
-    matchLabels:   # labels>app kısmı "postgres" olanlarla eşleşiyor
-      app: postgres # labels>app kısmı "postgres" olanlarla eşleşiyor
+    matchLabels:
+      app: postgres
   template:
     metadata:
       labels:
@@ -30,17 +41,24 @@ spec:
         - name: postgres
           image: postgres
           ports:
-            - containerPort: 5432 # dış port burada verilmiyor
+            - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-config   # ismi "postgres-config" olan confimap'ten env referans aldık
+                name: postgres-config
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-storage
+            # Init script volume'u ekliyoruz
+            - mountPath: /docker-entrypoint-initdb.d
+              name: postgres-init-volume
+              readOnly: true
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: postgres-init-volume
+          configMap:
+            name: postgres-init
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -48,13 +66,12 @@ metadata:
   name: postgres-pvc
   labels:
     app: postgres
-
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi   # bu postgres için diskte max 3 gb yer ayırıyorum
+      storage: 3Gi
 ---
 apiVersion: v1
 kind: Service
@@ -62,12 +79,11 @@ metadata:
   name: postgres-service
   labels:
     app: postgres
-
 spec:
   type: NodePort
   ports:
-    - port: 5432 # cluster içindeki postgresql service portu
-      targetPort: 5432 # pod içinde gideceği port
-      nodePort: 30007 # 30000 - 32767 arası kubernates tarafından dışardan erişim için ayrılmış portlar
+    - port: 5432
+      targetPort: 5432
+      nodePort: 30007
   selector:
     app: postgres
