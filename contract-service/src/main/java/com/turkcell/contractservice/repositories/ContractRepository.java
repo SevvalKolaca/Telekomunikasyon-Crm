@@ -11,5 +11,5 @@ import com.turkcell.contractservice.entities.Contract;
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, UUID> {
     boolean existsByContractNumber(String contractNumber);
-    List<Contract> findByCustomerId(String customerId);
+    List<Contract> findByCustomerId(UUID customerId);
 } 

@@ -1,7 +1,9 @@
 package com.turkcell.contractservice.dtos.requests;
 
-import com.turkcell.contractservice.entities.enums.BillingPlan;
+import com.turkcell.contractservice.entities.enums.BillingPeriod;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,9 +24,15 @@ public class CreateContractRequest {
     @NotNull(message = "Bitiş tarihi boş olamaz")
     private LocalDateTime endDate;
     
-    @NotBlank(message = "Müşteri ID boş olamaz")
-    private String customerId;
+    @NotNull(message = "Müşteri ID boş olamaz")
+    private UUID customerId;
+
+    @NotNull(message = "Plan ID boş olamaz")
+    private UUID planId;
     
-    @NotNull(message = "Faturalama planı boş olamaz")
-    private BillingPlan billingPlan;
+    @NotNull(message = "Faturalama periyodu boş olamaz")
+    private BillingPeriod billingPeriod;
+
+    @NotNull(message = "Fatura tutarı boş olamaz")
+    private Double price;
 } 

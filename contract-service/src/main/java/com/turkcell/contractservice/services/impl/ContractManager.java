@@ -3,6 +3,7 @@ package com.turkcell.contractservice.services.impl;
 import java.util.List;
 import java.util.UUID;
 
+import com.turkcell.contractservice.entities.enums.BillingPeriod;
 import io.github.ergulberke.event.contract.ContractCreatedEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,19 +38,20 @@ public class ContractManager implements ContractService {
         contract.setStartDate(request.getStartDate());
         contract.setEndDate(request.getEndDate());
         contract.setCustomerId(request.getCustomerId());
-        contract.setBillingPlan(request.getBillingPlan());
-        contract.setMonthlyFee(request.getBillingPlan().calculateMonthlyFee());
+        contract.setPlanId(request.getPlanId());
+        contract.setPrice(request.getPrice());
+        contract.setBillingPeriod(BillingPeriod.MONTHLY);
 
         // Sözleşmeyi kaydediyoruz ve geri dönen nesneyi 'savedContract' olarak alıyoruz
         Contract savedContract = repository.save(contract);
         // Setter'ları kullanarak event'i oluşturuyoruz
         ContractCreatedEvent event = new ContractCreatedEvent();
         event.setContractId(savedContract.getId());
-        event.setCustomerId(UUID.fromString(savedContract.getCustomerId())); // customerId'yi alıyoruz
-        event.setPlanId(UUID.randomUUID()); // Rastgele bir UUID oluşturuyoruz
+        event.setCustomerId(savedContract.getCustomerId()); // customerId'yi alıyoruz
+        event.setPlanId(savedContract.getPlanId()); // Rastgele bir UUID oluşturuyoruz
         event.setStartDate(savedContract.getStartDate());
         event.setEndDate(savedContract.getEndDate());
-        event.setPrice(savedContract.getMonthlyFee());
+        event.setPrice(savedContract.getPrice());
         event.setCurrency("TRY"); // Eğer farklı bir para birimi eklemek isterseniz burada değiştirebilirsiniz
         event.setStatus(savedContract.getStatus().toString()); // Status'ü string olarak alıyoruz
         event.setEventType("CONTRACT_CREATED");
@@ -85,13 +87,13 @@ public class ContractManager implements ContractService {
                 .orElseThrow(() -> new RuntimeException("Sözleşme bulunamadı."));
 
         contract.setEndDate(request.getEndDate());
-        contract.updateBillingPlan(request.getBillingPlan());
+        contract.updateBillingPeriod(request.getBillingPeriod());
 
         repository.save(contract);
     }
 
     @Override
-    public List<GetContractResponse> getByCustomerId(String customerId) {
+    public List<GetContractResponse> getByCustomerId(UUID customerId) {
         return repository.findByCustomerId(customerId)
                 .stream()
                 .map(this::mapToGetContractResponse)
@@ -137,10 +139,11 @@ public class ContractManager implements ContractService {
                 contract.getStartDate(),
                 contract.getEndDate(),
                 contract.getCustomerId(),
-                contract.getBillingPlan(),
+                contract.getPlanId(),
+                contract.getBillingPeriod(),
                 contract.getStatus(),
-                contract.isActive(),
-                contract.getMonthlyFee(),
+                contract.getIsActive(),
+                contract.getPrice(),
                 contract.getCancellationReason(),
                 contract.getCancellationDate(),
                 contract.getLastUpdateDate(),
