@@ -25,13 +25,11 @@ management:
   endpoint:
     health:
       show-details: always
+      probes:
+        enabled: true
 
-  health:
-    probes:
-      enabled: true
-
-  metrics:
-    export:
-      prometheus:
-        enabled: true  # Prometheus için metrikleri açar
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 

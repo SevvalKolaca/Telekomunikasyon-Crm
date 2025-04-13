@@ -36,7 +36,6 @@
 #     fetch-registry: true
 
 spring:
-  port: 8088
   application:
     name: notificationservice
   config:
@@ -47,13 +46,16 @@ spring:
     config:
       profile: local
 
+server:
+  port: 8088
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
-  metrics:
-    export:
-      prometheus:
-        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 

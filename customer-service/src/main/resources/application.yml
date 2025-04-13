@@ -50,7 +50,6 @@
 #    url: http://localhost:8083
 
 spring:
-  port: 8082
   application:
     name: customerservice
   cloud:
@@ -63,13 +62,16 @@ spring:
         max-attempts: 10
       profile: local
 
+server:
+  port: 8082
+
 management:
   endpoints:
     web:
       exposure:
         include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
-  metrics:
-    export:
-      prometheus:
-        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
