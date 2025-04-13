@@ -3,7 +3,7 @@ package com.turkcell.customer_service.service;
 import com.turkcell.customer_service.dto.CustomerRequest;
 import com.turkcell.customer_service.dto.CustomerResponse;
 import com.turkcell.customer_service.dto.Contract.GetContractResponse;
-import com.turkcell.customer_service.enums.BillingPlan;
+import com.turkcell.customer_service.enums.BillingPeriod;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,8 +21,8 @@ public interface CustomerService {
     // Sözleşme ile ilgili metodlar
     List<GetContractResponse> getByCustomerId(String customerId);
     GetContractResponse getById(UUID contractId);
-    void add(String customerId, BillingPlan planId, LocalDateTime startDate, LocalDateTime endDate);
-    void update(UUID contractId, LocalDateTime endDate, BillingPlan planId);
+    void add(String customerId, UUID planId, BillingPeriod billingPeriod, LocalDateTime startDate, LocalDateTime endDate);
+    void update(UUID contractId, LocalDateTime endDate, BillingPeriod billingPeriod);
     void cancelContract(UUID contractId, String reason);
     void suspendContract(UUID contractId);
     void reactivateContract(UUID contractId);

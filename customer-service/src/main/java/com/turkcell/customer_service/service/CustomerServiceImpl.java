@@ -9,11 +9,11 @@ import com.turkcell.customer_service.repository.CustomerRepository;
 import com.turkcell.customer_service.rules.CustomerBusinnessRules;
 import com.turkcell.customer_service.client.ContractServiceClient;
 import io.github.ergulberke.event.customer.CustomerCreatedEvent;
-import com.turkcell.customer_service.enums.BillingPlan;
 import com.turkcell.customer_service.dto.Contract.CreateContractRequest;
 import com.turkcell.customer_service.dto.Contract.GetContractResponse;
 import com.turkcell.customer_service.dto.Contract.UpdateContractRequest;
 import com.turkcell.customer_service.dto.Contract.CancelContractRequest;
+import com.turkcell.customer_service.enums.BillingPeriod;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -60,21 +60,22 @@ public class CustomerServiceImpl implements CustomerService {
         // Send event to Kafka
         customerProducer.sendCustomerCreatedEvent(event);
 
-        // Otomatik olarak sözleşme oluştur
-        /*CreateContractRequest contractRequest = new CreateContractRequest();
-        contractRequest.setContractNumber("CNT-" + System.currentTimeMillis()); // Benzersiz bir sözleşme numarası oluştur
-        contractRequest.setStartDate(LocalDateTime.now());
-        contractRequest.setEndDate(LocalDateTime.now().plusYears(1)); // Varsayılan olarak 1 yıllık sözleşme
-        contractRequest.setCustomerId(savedCustomer.getId().toString());
-        contractRequest.setBillingPlan(request.getBillingPlan());
-        contractServiceClient.add(contractRequest);*/
+        // Plan bilgilerini al
+        PlanResponse planResponse = planServiceClient.getPlanById(request.getPlanId()).getBody();
+        if (planResponse == null) {
+            throw new RuntimeException("Plan not found with ID: " + request.getPlanId());
+        }
 
-        CreateContractRequest contractRequest =new CreateContractRequest();
-        contractRequest.setContractNumber("CNT-"+System.currentTimeMillis());
+        // Otomatik olarak sözleşme oluştur
+        CreateContractRequest contractRequest = new CreateContractRequest();
+        contractRequest.setContractNumber("CNT-" + System.currentTimeMillis());
         contractRequest.setStartDate(LocalDateTime.now());
         contractRequest.setEndDate(LocalDateTime.now().plusYears(1)); // Varsayılan olarak 1 yıllık sözleşme
-        contractRequest.setCustomerId(savedCustomer.getId().toString());
-        contractRequest.setBillingPlan(request.getBillingPlan());
+        contractRequest.setCustomerId(savedCustomer.getId());
+        contractRequest.setPlanId(request.getPlanId());
+        contractRequest.setBillingPeriod(request.getBillingPeriod());
+        contractRequest.setPrice(planResponse.getPrice().doubleValue());
+        
         contractServiceClient.add(contractRequest);
         return buildCustomerResponse(savedCustomer);
     }
@@ -143,11 +144,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         // Eski plan bilgilerini sakla
         UUID oldPlanId = customer.getPlanId();
-        String oldPlanName = customer.getPlanName();
 
         // Customer entity'sini güncelle
         customer.setPlanId(newPlanId);
-        customer.setPlanName(newPlan.getName());
         customer.setPlanStartDate(LocalDate.now());
         customer.setPlanEndDate(LocalDate.now().plusMonths(newPlan.getDurationInMonths()));
 
@@ -167,20 +166,29 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void add(String customerId, BillingPlan planId, LocalDateTime startDate, LocalDateTime endDate) {
+    public void add(String customerId, UUID planId, BillingPeriod billingPeriod, LocalDateTime startDate, LocalDateTime endDate) {
+        // Plan bilgilerini al
+        PlanResponse planResponse = planServiceClient.getPlanById(planId).getBody();
+        if (planResponse == null) {
+            throw new RuntimeException("Plan not found with ID: " + planId);
+        }
+
         CreateContractRequest request = new CreateContractRequest();
-        request.setCustomerId(customerId);
+        request.setContractNumber("CNT-" + System.currentTimeMillis());
+        request.setCustomerId(UUID.fromString(customerId));
+        request.setPlanId(planId);
+        request.setBillingPeriod(billingPeriod);
+        request.setPrice(planResponse.getPrice().doubleValue());
         request.setStartDate(startDate);
         request.setEndDate(endDate);
-        request.setBillingPlan(planId);
         contractServiceClient.add(request);
     }
 
     @Override
-    public void update(UUID contractId, LocalDateTime endDate, BillingPlan planId) {
+    public void update(UUID contractId, LocalDateTime endDate, BillingPeriod billingPeriod) {
         UpdateContractRequest request = new UpdateContractRequest();
         request.setEndDate(endDate);
-        request.setBillingPlan(planId);
+        request.setBillingPeriod(billingPeriod);
         contractServiceClient.update(contractId, request);
     }
 
@@ -209,10 +217,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .phone(request.getPhone())
                 .address(request.getAddress())
                 .planId(request.getPlanId())
-                .planName(request.getPlanName())
                 .planStartDate(request.getPlanStartDate())
                 .planEndDate(request.getPlanEndDate())
-                .billingPlan(request.getBillingPlan())
+                .billingPeriod(request.getBillingPeriod())
                 .build();
     }
 
@@ -228,10 +235,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .updatedAt(customer.getUpdatedAt())
                 .accountStatus(customer.getAccountStatus())
                 .planId(customer.getPlanId())
-                .planName(customer.getPlanName())
                 .planStartDate(customer.getPlanStartDate())
                 .planEndDate(customer.getPlanEndDate())
-                .billingPlan(customer.getBillingPlan())
+                .billingPeriod(customer.getBillingPeriod())
                 .build();
     }
 }

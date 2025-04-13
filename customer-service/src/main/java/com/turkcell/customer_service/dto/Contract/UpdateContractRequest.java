@@ -1,6 +1,6 @@
 package com.turkcell.customer_service.dto.Contract;
 
-import com.turkcell.customer_service.enums.BillingPlan;
+import com.turkcell.customer_service.enums.BillingPeriod;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,6 @@ public class UpdateContractRequest {
     @NotNull(message = "Bitiş tarihi boş olamaz")
     private LocalDateTime endDate;
 
-    @NotNull(message = "Faturalama planı boş olamaz")
-    private BillingPlan billingPlan;
+    @NotNull(message = "Faturalama periyodu boş olamaz")
+    private BillingPeriod billingPeriod;
 }
