@@ -10,3 +10,14 @@ spring:
     config:
       profile: local
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus  # Prometheus, health, info endpoint'leri açık
+  metrics:
+    export:
+      prometheus:
+        enabled: true  # Prometheus metrikleri için etkinleştirilmiş
+
+
