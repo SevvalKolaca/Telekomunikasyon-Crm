@@ -261,9 +261,9 @@ services:
       - SPRING_KAFKA_CONSUMER_GROUP_ID=customer-service-group
       - SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET=earliest
       - SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
-      - SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER=org.apache.kafka.common.serialization.StringDeserializer
+      - SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER=org.springframework.kafka.support.serializer.JsonDeserializer
       - SPRING_KAFKA_PRODUCER_KEY_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
-      - SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
+      - SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER=org.springframework.kafka.support.serializer.JsonSerializer
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8888/eureka/
       - SPRING_CLOUD_CONFIG_PROFILE=localdevad
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8089
