@@ -75,6 +75,3 @@ management:
       export:
         enabled: true
 
-contract:
-  service:
-    url: http://contract-service:8083
