@@ -1,13 +1,19 @@
 spring:
   application:
-    name: plan-service
+    name: planservice
   config:
-    import: optional:configserver:http://config-server:8089
+    import: configserver:http://config-server:8089
   profiles:
     active: local
   cloud:
     config:
+      fail-fast: false
+      retry:
+        initial-interval: 1500
+        max-interval: 10000
+        max-attempts: 10
       profile: local
+      request-connect-timeout: 5000
 
 server:
   port: 8084
