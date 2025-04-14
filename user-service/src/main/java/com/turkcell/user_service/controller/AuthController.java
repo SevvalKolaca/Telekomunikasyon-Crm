@@ -5,6 +5,9 @@ import com.turkcell.user_service.entity.User;
 import com.turkcell.user_service.repository.UserRepository;
 import io.github.ergulberke.jwt.JwtTokenProvider;
 import io.github.ergulberke.model.Role;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +30,12 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(summary = "Kullanıcı girişi", description = "Email ve şifre ile kullanıcı giriş yapar ve JWT token alır.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Giriş başarılı, token döndü"),
+            @ApiResponse(responseCode = "401", description = "Geçersiz kimlik bilgileri"),
+            @ApiResponse(responseCode = "500", description = "Sunucu hatası")
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         System.out.println("===== LOGIN İSTEĞİ GELDİ =====");
