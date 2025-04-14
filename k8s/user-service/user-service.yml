@@ -54,8 +54,8 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: sevvalkolaca/user-service:latest
-          imagePullPolicy: IfNotPresent
+          image: sevvalkolaca/turkcell-user-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8081
           resources:
