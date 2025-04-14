@@ -1,9 +1,7 @@
 package com.turkcell.user_service.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -59,32 +57,38 @@ public class UserServiceImpl implements UserService {
             throw new UserException("User already exists");
         }
 
-        // Şifrenin encode edilmesi
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         request.setPassword(encodedPassword);
 
-        User user = modelMapper.map(request, User.class);
+        User user = new User();
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setPhone(request.getPhone());
+
+        // Set<Role> içine role'u koy
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(request.getRole());
+        user.setRoles(roleSet);
+
         User savedUser = userRepository.save(user);
 
-        // Kullanıcı oluşturulduktan sonra Kafka event'ini yayınla
+        // Kafka event gönderimi
         UserCreatedEvent event = new UserCreatedEvent(
                 savedUser.getId().toString(),
                 savedUser.getEmail(),
                 LocalDateTime.now()
         );
 
-        // Kafka'ya mesaj gönderirken CompletableFuture ile callback:
-        CompletableFuture<SendResult<String, UserCreatedEvent>> future =
-                kafkaTemplate.send("user-created-topic", event);
-
-        future.whenComplete((result, ex) -> {
-            if (ex == null) {
-                log.info("Mesaj başarıyla gönderildi. Offset: {}",
-                        result.getRecordMetadata().offset());
-            } else {
-                log.error("Mesaj gönderilirken hata oluştu", ex);
-            }
-        });
+        kafkaTemplate.send("user-created-topic", event)
+                .whenComplete((result, ex) -> {
+                    if (ex == null) {
+                        log.info("Mesaj başarıyla gönderildi. Offset: {}", result.getRecordMetadata().offset());
+                    } else {
+                        log.error("Mesaj gönderilirken hata oluştu", ex);
+                    }
+                });
 
         log.info("UserCreatedEvent Kafka'ya gönderildi: {}", event);
 
