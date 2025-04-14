@@ -156,6 +156,16 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
+
+		<!-- SWAGGER -->
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+
 		<!-- KAFKA -->
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
