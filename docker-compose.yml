@@ -265,7 +265,7 @@ services:
       - SPRING_KAFKA_PRODUCER_KEY_SERIALIZER=org.apache.kafka.common.serialization.StringSerializer
       - SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER=org.springframework.kafka.support.serializer.JsonSerializer
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://discovery-server:8888/eureka/
-      - SPRING_CLOUD_CONFIG_PROFILE=localdevad
+      - SPRING_CLOUD_CONFIG_PROFILE=local
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8089
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8089
     depends_on:
