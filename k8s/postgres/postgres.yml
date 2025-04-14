@@ -10,7 +10,7 @@ data:
   POSTGRES_PASSWORD: test
   POSTGRES_DB: postgres
 ---
-# "userservice" veritabanını oluşturacak init script içeren ConfigMap
+
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -18,8 +18,13 @@ metadata:
   labels:
     app: postgres
 data:
-  init-userservice.sql: |
+  init-databases.sql: |
     CREATE DATABASE userservice;
+    CREATE DATABASE "customer-support";
+    CREATE DATABASE analytics_service;
+    CREATE DATABASE "billing-payment-service";
+    CREATE DATABASE "contract-service";
+    CREATE DATABASE plan;
 ---
 apiVersion: apps/v1
 kind: Deployment
