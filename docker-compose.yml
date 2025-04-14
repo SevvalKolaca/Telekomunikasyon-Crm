@@ -188,14 +188,14 @@ services:
         condition: service_started
       gateway-server:
         condition: service_started
+      kafka:
+        condition: service_started
     environment:
       SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: jdbc:postgresql://pg-3:5432/postgres
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: test
       SPRING_CLOUD_CONFIG_PROFILE: local
-      SPRING_CLOUD_CONFIG_URI: http://config-server:8089
-      SPRING_CONFIG_IMPORT: configserver:http://config-server:8089
 
 
 
